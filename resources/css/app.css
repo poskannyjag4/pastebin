@@ -1,5 +1,3 @@
-@import 'tailwindcss';
-
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -8,4 +6,236 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* --- Основные переменные и сброс --- */
+:root {
+    --bg-color: #1e1e24;
+    --primary-bg-color: #2a2a33;
+    --secondary-bg-color: #3c3c47;
+    --text-color: #dcdce0;
+    --text-color-secondary: #8d8d93;
+    --primary-color: #7e57c2;
+    --border-color: #4a4a55;
+    --font-main: 'Roboto', sans-serif;
+    --font-code: 'Fira Code', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+a { color: var(--primary-color); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* --- Структура и Layout --- */
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.main-content-area {
+    display: flex;
+    gap: 25px; /* Расстояние между колонками */
+    margin-top: 20px;
+}
+
+.content-column {
+    flex: 3; /* Занимает 3/4 доступного пространства */
+    background-color: var(--primary-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 25px;
+}
+
+.sidebar-column {
+    flex: 1; /* Занимает 1/4 доступного пространства */
+}
+
+/* --- Шапка --- */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.app-header .logo a {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.main-nav ul {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logout-button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+    padding: 0;
+}
+.logout-button:hover {
+    text-decoration: underline;
+}
+
+
+/* --- Сайдбар --- */
+.sidebar-block {
+    background-color: var(--primary-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.sidebar-block h3 {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--primary-color);
+    font-size: 18px;
+}
+
+.paste-list {
+    list-style-type: none;
+}
+
+.paste-list li {
+    margin-bottom: 12px;
+}
+
+.paste-list li a {
+    display: block;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Добавляет "..." если название не влезает */
+}
+
+.paste-list li span {
+    font-size: 12px;
+    color: var(--text-color-secondary);
+}
+
+
+/* --- Подвал --- */
+.app-footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-color-secondary);
+    font-size: 14px;
+}
+
+/* --- Адаптивность --- */
+@media (max-width: 900px) {
+    .main-content-area {
+        flex-direction: column-reverse; /* Сайдбар будет сверху на мобильных */
+    }
+}
+
+/* --- Стили для формы создания пасты --- */
+.content-column h1 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--text-color-secondary);
+}
+
+.paste-textarea,
+.form-group input[type="text"],
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    font-size: 14px;
+}
+
+.paste-textarea {
+    font-family: var(--font-code);
+    min-height: 250px;
+    resize: vertical;
+}
+
+.paste-textarea:focus,
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(126, 87, 194, 0.5);
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Две колонки для настроек */
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: var(--secondary-bg-color);
+    border-radius: 8px;
+}
+
+.create-button {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.create-button:hover {
+    background-color: #673ab7; /* Более темный оттенок фиолетового */
+}
+
+/* --- Стили для ошибок валидации --- */
+.is-invalid {
+    border-color: #e53e3e; /* Красный цвет для ошибки */
+}
+
+.error-message {
+    color: #fca5a5; /* Светло-красный текст ошибки */
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Адаптивность для сетки настроек */
+@media (max-width: 600px) {
+    .options-grid {
+        grid-template-columns: 1fr; /* Одна колонка на маленьких экранах */
+    }
 }
