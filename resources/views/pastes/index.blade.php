@@ -10,9 +10,9 @@
         @csrf
 
         <div class="form-group">
-            <label for="content">Ваш текст или код:</label>
+            <label for="text">Ваш текст или код:</label>
             <textarea id="pasteContent"
-                      name="content"
+                      name="text"
                       class="paste-textarea @error('content') is-invalid @enderror"
                       placeholder="Вставьте ваш текст или код сюда..."
                       required>{{ old('content') }}</textarea>
@@ -37,16 +37,11 @@
             </div>
 
             <div class="form-group">
-                <label for="syntax">Подсветка синтаксиса:</label>
-                <select id="syntax" name="syntax" class="@error('syntax') is-invalid @enderror">
-                    <option value="plaintext" @selected(old('syntax') == 'plaintext')>Простой текст</option>
-                    <option value="javascript" @selected(old('syntax') == 'javascript')>JavaScript</option>
-                    <option value="python" @selected(old('syntax') == 'python')>Python</option>
-                    <option value="html" @selected(old('syntax') == 'html')>HTML</option>
-                    <option value="css" @selected(old('syntax') == 'css')>CSS</option>
-                    <option value="php" @selected(old('syntax') == 'php')>PHP</option>
-                    <option value="sql" @selected(old('syntax') == 'sql')>SQL</option>
-                    <option value="java" @selected(old('syntax') == 'java')>Java</option>
+                <label for="programming_language">Подсветка синтаксиса:</label>
+                <select id="programming_language" name="programming_language" class="@error('syntax') is-invalid @enderror">
+                    @foreach(\App\Enums\LanguageEnum::cases() as $lang)
+                        <option value="{{$lang->name}}" @selected(old('syntax') == $lang->name)>{{$lang->value}}</option>
+                    @endforeach
                 </select>
                 @error('syntax')
                 <div class="error-message">{{ $message }}</div>
@@ -54,24 +49,27 @@
             </div>
 
             <div class="form-group">
-                <label for="expiration">Срок действия:</label>
-                <select id="expiration" name="expiration">
-                    <option value="never" @selected(old('expiration') == 'never')>Никогда</option>
-                    <option value="10m" @selected(old('expiration') == '10m')>10 минут</option>
-                    <option value="1h" @selected(old('expiration') == '1h')>1 час</option>
-                    <option value="1d" @selected(old('expiration') == '1d')>1 день</option>
-                    <option value="1w" @selected(old('expiration') == '1w')>1 неделя</option>
+                <label for="expiration_at">Срок действия:</label>
+                <select id="expiration_at" name="expiration_at">
+                    @foreach(\App\Enums\ExpirationEnum::cases() as $expiration)
+                        <option value="{{$expiration->name}}" @selected(old('expiration') == $expiration->name)>{{$expiration->value}}</option>
+                    @endforeach
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="access">Доступ:</label>
-                <select id="access" name="access">
-                    <option value="public" @selected(old('access') == 'public')>Публичный</option>
-                    <option value="unlisted" @selected(old('access') == 'unlisted')>По ссылке</option>
-                    @auth
-                    <option value="private" @selected(old('access') == 'private')>Приватный (только для меня)</option>
-                    @endauth
+                <label for="visibility">Доступ:</label>
+                <select id="visibility" name="visibility">
+
+                    @foreach(\App\Enums\VisibilityEnum::cases() as $visibility)
+                        @if($visibility->name === 'private')
+                            @auth
+                                <option value="{{$visibility->name}}" @selected(old('access') == $visibility->name)>{{$visibility->value}}</option>
+                            @endauth
+                        @else
+                            <option value="{{$visibility->name}}" @selected(old('access') == $visibility->name)>{{$visibility->value}}</option>
+                        @endif
+                    @endforeach
                 </select>
             </div>
         </div>
