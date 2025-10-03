@@ -1,7 +1,7 @@
 <div class="sidebar-block">
     <h3>Последние публичные пасты</h3>
     <ul class="paste-list">
-        @forelse ($latestPublicPastes as $paste)
+        @forelse ($latestPastes as $paste)
             <li>
                 <a href="{{-- route('pastes.show', $paste->unique_id) --}}">{{ $paste->title ?? 'Без названия' }}</a>
                 <span>{{ $paste->programming_language }} | {{ $paste->created_at->diffForHumans() }}</span>
@@ -19,10 +19,10 @@
     <div class="sidebar-block">
         <h3>Мои последние пасты</h3>
         <ul class="paste-list">
-            @forelse ($userLatestPastes as $paste)
+            @forelse ($latestUserPastes as $paste)
                 <li>
                     <a href="{{-- route('pastes.show', $paste->unique_id) --}}">{{ $paste->title ?? 'Без названия' }}</a>
-                    <span>{{ $paste->syntax }} | {{ $paste->created_at->diffForHumans() }}</span>
+                    <span>{{ $paste->programming_language }} | {{ $paste->created_at->diffForHumans() }}</span>
                 </li>
             @empty
                 <li>

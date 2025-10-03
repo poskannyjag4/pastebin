@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('pastes', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->text('text');
-            $table->date('expires_at');
+            $table->dateTime('expires_at');
             $table->string('visibility');
             $table->string('programming_language');
-            $table->unsignedBigInteger('users_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('users_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

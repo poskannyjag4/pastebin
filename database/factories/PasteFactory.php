@@ -18,9 +18,10 @@ class PasteFactory extends Factory
     {
         return [
             'text' => fake()->realText(),
-            'created_at' => fake()->dateTime(),
+            'title'=> fake()->word(),
+            'created_at' => fake()->dateTimeBetween('-1 week', '+1 week'),
             'visibility' => fake()->word(),
-            'expires_at' => fake()->dateTime(),
+            'expires_at' => fake()->dateTimeBetween('-1 week', '+1 week'),
             'programming_language' => fake()->word()
         ];
     }

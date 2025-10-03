@@ -4,9 +4,8 @@ use App\Http\Controllers\PasteController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', 'App\Http\Controllers\PasteController@index');
-Route::post('/', 'App\Http\Controllers\PasteController@store');
-Route::get('/{hashId}', 'App\Http\Controllers\PasteController@show');
+Route::get('/', [PasteController::class, 'index']);
+
 
 Route::controller(PasteController::class)->name('paste.')->group(function () {
     Route::get('/', 'index')->name('home');
