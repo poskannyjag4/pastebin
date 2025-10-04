@@ -29,7 +29,7 @@
                        id="title"
                        name="title"
                        value="{{ old('title') }}"
-                       placeholder="Необязательно"
+                       placeholder="Название"
                        class="@error('title') is-invalid @enderror">
                 @error('title')
                 <div class="error-message">{{ $message }}</div>
@@ -38,23 +38,26 @@
 
             <div class="form-group">
                 <label for="programming_language">Подсветка синтаксиса:</label>
-                <select id="programming_language" name="programming_language" class="@error('syntax') is-invalid @enderror">
+                <select id="programming_language" name="programming_language" class="@error('programming_language') is-invalid @enderror">
                     @foreach(\App\Enums\LanguageEnum::cases() as $lang)
-                        <option value="{{$lang->name}}" @selected(old('syntax') == $lang->name)>{{$lang->value}}</option>
+                        <option value="{{$lang->name}}" @selected(old('programming_language') == $lang->name)>{{$lang->value}}</option>
                     @endforeach
                 </select>
-                @error('syntax')
+                @error('programming_language')
                 <div class="error-message">{{ $message }}</div>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="expiration_at">Срок действия:</label>
-                <select id="expiration_at" name="expiration_at">
+                <label for="expires_at">Срок действия:</label>
+                <select id="expires_at" name="expires_at" class="@error('expires_at') is-invalid @enderror">
                     @foreach(\App\Enums\ExpirationEnum::cases() as $expiration)
-                        <option value="{{$expiration->name}}" @selected(old('expiration') == $expiration->name)>{{$expiration->value}}</option>
+                        <option value="{{$expiration->name}}" @selected(old('expires_at') == $expiration->name)>{{$expiration->value}}</option>
                     @endforeach
                 </select>
+                @error('expires_at')
+                <div class="error-message">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">
@@ -64,10 +67,10 @@
                     @foreach(\App\Enums\VisibilityEnum::cases() as $visibility)
                         @if($visibility->name === 'private')
                             @auth
-                                <option value="{{$visibility->name}}" @selected(old('access') == $visibility->name)>{{$visibility->value}}</option>
+                                <option value="{{$visibility->name}}" @selected(old('visibility') == $visibility->name)>{{$visibility->value}}</option>
                             @endauth
                         @else
-                            <option value="{{$visibility->name}}" @selected(old('access') == $visibility->name)>{{$visibility->value}}</option>
+                            <option value="{{$visibility->name}}" @selected(old('visibility') == $visibility->name)>{{$visibility->value}}</option>
                         @endif
                     @endforeach
                 </select>

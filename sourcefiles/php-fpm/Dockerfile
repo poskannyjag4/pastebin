@@ -18,6 +18,13 @@ RUN docker-php-ext-install zip && docker-php-ext-configure intl && docker-php-ex
 # Add MySQL and Postgres/pgsql support
 RUN docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql && docker-php-ext-install pdo_pgsql pgsql
 
+# Устанавливаем системные зависимости для gmp, компилируем расширение и очищаем кэш
+RUN apt-get update && \
+    apt-get install -y libgmp-dev && \
+    docker-php-ext-install gmp && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN apt-get update && \
 apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev && \
 docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ && \

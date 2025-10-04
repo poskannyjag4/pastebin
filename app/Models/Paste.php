@@ -32,6 +32,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereUsersId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereVisibility($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereUserId($value)
  * @mixin \Eloquent
  */
 class Paste extends Model
@@ -55,6 +56,6 @@ class Paste extends Model
     /**
      * @var list<string>
      */
-    protected $fillable = ['user_id', 'text', 'expires_at', 'visibility', 'programming_language'];
+    protected $fillable = ['user_id', 'title', 'text', 'expires_at', 'visibility', 'programming_language'];
 
 }

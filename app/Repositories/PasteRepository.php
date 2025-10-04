@@ -2,10 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Enums\LanguageEnum;
+use App\Enums\VisibilityEnum;
 use App\Models\Paste;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-
+/**
+ * @phpstan-type PasteCreationData array{
+ * title: string,
+ * text: string,
+ * visibility: VisibilityEnum|string,
+ * expires_at: Carbon|null,
+ * programming_language: LanguageEnum|string
+ * }
+ */
 class PasteRepository
 {
     /**
@@ -13,8 +23,7 @@ class PasteRepository
      */
     public function getLatestPastes(): Collection
     {
-        $pastes = Paste::where('expires_at', '>', Carbon::now())->latest()->take(10)->get();
-        return $pastes;
+        return Paste::where('expires_at', '>', Carbon::now())->orWhere('expires_at', '=', null)->latest()->take(10)->get();
     }
 
     /**
@@ -23,7 +32,23 @@ class PasteRepository
      */
     public function getLatestUserPastes(int $userId): Collection
     {
-        $pastes = Paste::where('user_id', '=', $userId)->where('expires_at', '>', Carbon::now())->latest()->take(10)->get();
-        return $pastes;
+        return Paste::where('user_id', '=', $userId)->where('expires_at', '>', Carbon::now())->latest()->take(10)->get();
+    }
+
+    /**
+     * @param PasteCreationData $data
+     * @return Paste
+     */
+    public function create(array $data): Paste
+    {
+        return Paste::create($data);
+    }
+
+    /**
+     * @param int $id
+     * @return Paste
+     */
+    public function get(int $id): Paste{
+        return Paste::find($id);
     }
 }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('text');
-            $table->dateTime('expires_at');
+            $table->dateTime('expires_at')->nullable();
             $table->string('visibility');
             $table->string('programming_language');
             $table->unsignedBigInteger('user_id')->nullable();

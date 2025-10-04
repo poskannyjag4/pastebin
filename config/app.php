@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'hashids_salt' => env('HASHIDS_SALT', 'your-default-salt'),
+
 ];
