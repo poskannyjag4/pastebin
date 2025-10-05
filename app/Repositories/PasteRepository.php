@@ -24,7 +24,10 @@ class PasteRepository
      */
     public function getLatestPastes(): Collection
     {
-        return Paste::where('expires_at', '>', Carbon::now())->orWhere('expires_at', '=', null)->latest()->take(10)->get();
+        return Paste::where(function ($query){
+            $query->where('expires_at', '>', Carbon::now())
+                ->orWhere('expires_at', '=', null);
+        })->where('visibility', '=', VisibilityEnum::public->name)->latest()->take(10)->get();
     }
 
     /**
@@ -33,7 +36,10 @@ class PasteRepository
      */
     public function getLatestUserPastes(int $userId): Collection
     {
-        return Paste::where('user_id', '=', $userId)->where('expires_at', '>', Carbon::now())->latest()->take(10)->get();
+        return Paste::where('user_id', '=', $userId)->where(function ($query){
+            $query->where('expires_at', '>', Carbon::now())
+                ->orWhere('expires_at', '=', null);
+        })->latest()->take(10)->get();
     }
 
     /**

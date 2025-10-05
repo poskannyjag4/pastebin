@@ -92,6 +92,18 @@ class PasteService
          * @var int $id
          */
         $id = $this->hashids->decode($hashId)[0];
-        return $this->pasteRepository->get($id);
+        $paste = $this->pasteRepository->get($id);
+        if(!is_null($paste->expires_at) && ($paste->expires_at < Carbon::now())){
+            abort(404);
+        }
+        if($paste->visibility == VisibilityEnum::private->name){
+            info('denied');
+            if(\Gate::denies('ViewPrivatePaste', $paste)){
+                abort(404);
+            }
+        }
+
+        return $paste;
+
     }
 }
