@@ -1,10 +1,6 @@
-@import 'tailwindcss';
-
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
@@ -328,4 +324,77 @@ a:hover { text-decoration: underline; }
 }
 .token.number {
     color: #d19a66; /* Оранжевый для чисел */
+}
+
+/* --- Стили для форм аутентификации --- */
+.auth-form-container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+.auth-status {
+    margin-bottom: 1rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #4ade80; /* Зеленый */
+}
+/* Стили для "Запомнить меня" и ссылок пока оставим базовые, Tailwind справится */
+/* --- Стили для опций и кнопок в формах аутентификации --- */
+
+.auth-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    font-size: 14px;
+}
+
+.remember-me-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-color-secondary);
+    cursor: pointer;
+}
+
+.secondary-link {
+    font-size: 14px;
+    color: var(--text-color-secondary);
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.secondary-link:hover {
+    color: var(--primary-color);
+}
+
+.auth-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.auth-actions .create-button {
+    /* Уменьшим кнопку, чтобы она не была на всю ширину */
+    width: auto;
+    padding: 10px 25px;
+}
+
+/* --- Стили для гостевого лэйаута --- */
+.guest-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.guest-content {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    background-color: var(--primary-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 30px;
 }
