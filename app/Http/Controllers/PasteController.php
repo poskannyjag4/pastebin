@@ -26,6 +26,7 @@ class PasteController extends Controller
      */
     public function index(): Factory|View|\Illuminate\View\View{
         $latestPastes = $this->pasteService->getDataForLayout();
+        info('xuy');
         return view('pastes.index', $latestPastes);
     }
 

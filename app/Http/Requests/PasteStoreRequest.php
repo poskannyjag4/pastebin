@@ -32,7 +32,7 @@ class PasteStoreRequest extends FormRequest
         /** @var array<int, string> $allowedVisibility */
         $allowedVisibility = array_map(fn($visibility) => $visibility->name, VisibilityEnum::cases());
         /** @var array<int, string> $allowedExpiration */
-        $allowedExpiration = array_map(fn($expiration) => $expiration, ExpirationEnum::cases());
+        $allowedExpiration = array_map(fn($expiration) => $expiration->name, ExpirationEnum::cases());
 
         return [
             'title' => 'required|string|max:255',

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Enums\LanguageEnum;
 use App\Enums\VisibilityEnum;
 use App\Models\Paste;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 /**
@@ -37,11 +38,16 @@ class PasteRepository
 
     /**
      * @param PasteCreationData $data
+     * @param ?User $user
      * @return Paste
      */
-    public function create(array $data): Paste
+    public function create(array $data, ?User $user): Paste
     {
-        return Paste::create($data);
+        if(is_null($user)){
+            return Paste::create($data);
+        }
+        return $user->pastes()->create($data);
+
     }
 
     /**

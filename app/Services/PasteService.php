@@ -5,7 +5,10 @@ namespace App\Services;
 use App\DTOs\CreatedPasteDTO;
 use App\DTOs\PasteDTO;
 use App\Enums\ExpirationEnum;
+use App\Enums\LanguageEnum;
+use App\Enums\VisibilityEnum;
 use App\Models\Paste;
+use App\Models\User;
 use App\Repositories\PasteRepository;
 use Hashids\Hashids;
 use Illuminate\Support\Carbon;
@@ -54,18 +57,31 @@ class PasteService
     public function store(PasteDTO $data): string
     {
         $expires_at = ExpirationEnum::hoursFromName($data->expires_at);
-
         /**
-         * @var Paste $paste
+         * @var array{
+         *  title: string,
+         *  text: string,
+         *  visibility: \Carbon\Carbon|string,
+         *  expires_at: Carbon|null,
+         *  programming_language: LanguageEnum|string
+         *  } $dataForPaste
          */
-        $paste = $this->pasteRepository->create([
+        $dataForPaste = [
             'title' => $data->title,
             'text' => $data->text,
             'visibility' => $data->visibility,
             'expires_at' => $expires_at == 0 ?  null : Carbon::now()->
             addHours($expires_at),
             'programming_language' => $data->programming_language
-        ]);
+        ];
+        /**
+         * @var ?User $user
+         */
+        $user = Auth::user();
+        /**
+         * @var Paste $paste
+         */
+        $paste = $this->pasteRepository->create($dataForPaste, $user);
 
         return $this->hashids->encode($paste->id);
 
