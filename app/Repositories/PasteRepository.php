@@ -7,6 +7,7 @@ use App\Enums\VisibilityEnum;
 use App\Models\Paste;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Ramsey\Uuid\UuidInterface;
 
@@ -83,9 +84,9 @@ class PasteRepository
 
     /**
      * @param int $userId
-     * @return \Illuminate\Contracts\Pagination\Paginator
+     * @return Paginator<int, Paste>
      */
-    public function getUserPastes(int $userId): \Illuminate\Contracts\Pagination\Paginator
+    public function getUserPastes(int $userId): Paginator
     {
         return Paste::where('user_id', '=', $userId)->where(function ($query){
             $query->where('expires_at', '>', Carbon::now())

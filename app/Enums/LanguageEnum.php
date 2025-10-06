@@ -7,7 +7,7 @@ enum LanguageEnum: string
     case plaintext = 'Простой текст';
     case python = 'Python';
     case php = 'PHP';
-    case html = 'HTML';
+    case xml = 'HTML';
     case js = 'JavaScript';
     case css = 'CSS';
     case sql = 'SQL';

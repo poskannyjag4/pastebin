@@ -24,7 +24,7 @@
             <button id="copyContentButton" class="action-button">Копировать содержимое</button>
         </div>
         <div class="paste-code-block">
-            <pre><code>{!! $paste->text !!}</code></pre>
+            <pre><code class="language-{{$paste->programming_language}}">{{ $paste->text }}</code></pre>
         </div>
 
         <div id="raw-content" style="display: none;">{{ $paste->text }}</div>

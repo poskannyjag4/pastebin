@@ -138,7 +138,7 @@ class PasteService
 
     /**
      * @return array{
-     *     pastes: Paginator,
+     *     pastes: Paginator<int, Paste>,
      *     hashIds: string[]
      * }
      */
@@ -149,7 +149,7 @@ class PasteService
         }
         $pastes = $this->pasteRepository->getUserPastes(Auth::id());
         $hashIds = [];
-        foreach ($pastes as $paste){
+        foreach ($pastes->items() as $paste){
             $hashIds[] = $this->hashids->encode($paste->id);
         }
         return compact('pastes', 'hashIds');
