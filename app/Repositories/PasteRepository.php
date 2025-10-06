@@ -80,4 +80,16 @@ class PasteRepository
     {
         return Paste::where('token', '=', $token)->first();
     }
+
+    /**
+     * @param int $userId
+     * @return \Illuminate\Contracts\Pagination\Paginator
+     */
+    public function getUserPastes(int $userId): \Illuminate\Contracts\Pagination\Paginator
+    {
+        return Paste::where('user_id', '=', $userId)->where(function ($query){
+            $query->where('expires_at', '>', Carbon::now())
+                  ->orWhere('expires_at', '=', null);
+        })->simplePaginate(10);
+    }
 }

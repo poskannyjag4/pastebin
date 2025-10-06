@@ -11,6 +11,7 @@ use App\Models\Paste;
 use App\Models\User;
 use App\Repositories\PasteRepository;
 use Hashids\Hashids;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
@@ -34,8 +35,8 @@ class PasteService
      * Собирает данные о последних постах для основного шаблона
      *
      * @return array{
-     *  latestPastes: Collection<int, Paste>,
-     *  latestUserPastes: Collection<int, Paste>|null
+     *  latestPastes: Collection<string, Paste>,
+     *  latestUserPastes: Collection<string, Paste>|null
      *  }
      */
     public function getDataForLayout(): array
@@ -123,11 +124,34 @@ class PasteService
         return $paste;
     }
 
+    /**
+     * @param string $uuid
+     * @return Paste
+     */
     public function getUnlisted(string $uuid): Paste{
         $paste = $this->pasteRepository->getByToken($uuid);
         if(is_null($paste->expires_at) || $paste->expires_at < Carbon::now() || is_null($paste)){
             return $paste;
         }
         abort(404);
+    }
+
+    /**
+     * @return array{
+     *     pastes: Paginator,
+     *     hashIds: string[]
+     * }
+     */
+    public function getUserPastes(): array
+    {
+        if(!Auth::check()){
+          abort(404);
+        }
+        $pastes = $this->pasteRepository->getUserPastes(Auth::id());
+        $hashIds = [];
+        foreach ($pastes as $paste){
+            $hashIds[] = $this->hashids->encode($paste->id);
+        }
+        return compact('pastes', 'hashIds');
     }
 }

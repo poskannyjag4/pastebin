@@ -7,7 +7,7 @@
             <li><a href="{{ route('paste.home') }}">Создать</a></li>
 
             @auth
-                <li><a href="{{-- route('my-pastes') --}}">Мои пасты</a></li>
+                <li><a href="{{ route('paste.my-pastes') }}">Мои пасты</a></li>
                 <li>
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf

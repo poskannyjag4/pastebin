@@ -70,4 +70,13 @@ class PasteController extends Controller
         $pastes['identifier'] = $uuid;
         return view('pastes.show', $pastes);
     }
+
+    public function showUserPastes(): View
+    {
+        $latestPastes = $this->pasteService->getDataForLayout();
+        $userPastes = $this->pasteService->getUserPastes();
+        return view('pastes.user-pastes', [...$userPastes, ...$latestPastes]);
+
+
+    }
 }

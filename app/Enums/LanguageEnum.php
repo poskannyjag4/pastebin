@@ -4,7 +4,7 @@ namespace App\Enums;
 
 enum LanguageEnum: string
 {
-    case plainText = 'Простой текст';
+    case plaintext = 'Простой текст';
     case python = 'Python';
     case php = 'PHP';
     case html = 'HTML';

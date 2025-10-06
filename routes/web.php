@@ -26,6 +26,7 @@ require __DIR__.'/auth.php';
 Route::controller(PasteController::class)->name('paste.')->group(function () {
     Route::get('/', 'index')->name('home');
     Route::post('/', 'store')->name('store');
+    Route::get('/my-pastes', 'showUserPastes')->name('my-pastes');
     Route::get('/s/{uuid}', 'share')->name('share');
     Route::get('/{hashId}', 'show')->name('show');
 });
