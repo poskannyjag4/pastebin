@@ -497,3 +497,53 @@ tbody tr:last-child td {
     justify-content: center;
 }
 
+.social-login-container {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--text-color-secondary);
+    font-size: 14px;
+    margin-bottom: 1rem;
+}
+.separator::before, .separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+.separator:not(:empty)::before { margin-right: .5em; }
+.separator:not(:empty)::after { margin-left: .5em; }
+
+.social-login-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: opacity 0.2s ease;
+}
+.social-login-btn:hover {
+    opacity: 0.9;
+}
+.github-btn {
+    background-color: #24292e;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+
+.github-btn {
+    background-color: #24292e;
+}
+
+.google-btn {
+    background-color: #DB4437;
+}

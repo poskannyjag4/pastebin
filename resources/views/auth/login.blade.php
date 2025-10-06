@@ -57,5 +57,16 @@
                 </button>
             </div>
         </form>
+        <div class="social-login-container">
+            <div class="separator">Или войдите с помощью</div>
+            <div class="social-buttons">
+                <a href="{{ route('socialite.redirect', 'github') }}" class="social-login-btn github-btn">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="{{ route('socialite.redirect', 'google') }}" class="social-login-btn google-btn">
+                    <i class="fab fa-google"></i> Google
+                </a>
+            </div>
+        </div>
     </div>
 @endsection
