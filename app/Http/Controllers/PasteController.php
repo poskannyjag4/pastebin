@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PasteController extends Controller
 {
@@ -37,12 +38,16 @@ class PasteController extends Controller
     public function store(PasteStoreRequest $request): RedirectResponse{
         $validated = $request->toDTO();
         try {
-            $hashId = $this->pasteService->store($validated);
+            $identifier = $this->pasteService->store($validated);
         }
         catch (\InvalidArgumentException $e){
             return redirect()->back()->withInput()->withErrors(['expires_at' => 'Выбрано недопустимое время истечения. Пожалуйста, выберите значение из списка.']);
         }
-        return redirect()->route('paste.show', ['hashId' => $hashId]);
+
+        if(Str::isUuid($identifier)){
+            return redirect()->route('paste.share', ['uuid' => $identifier]);
+        }
+        return redirect()->route('paste.show', ['hashId' => $identifier]);
     }
 
     /**
@@ -54,6 +59,15 @@ class PasteController extends Controller
         $paste = $this->pasteService->get($hashId);
         $pastes = $this->pasteService->getDataForLayout();
         $pastes['paste'] = $paste;
+        $pastes['identifier'] = $hashId;
+        return view('pastes.show', $pastes);
+    }
+
+    public function share(string $uuid): View{
+        $paste = $this->pasteService->getUnlisted($uuid);
+        $pastes = $this->pasteService->getDataForLayout();
+        $pastes['paste'] = $paste;
+        $pastes['identifier'] = $uuid;
         return view('pastes.show', $pastes);
     }
 }

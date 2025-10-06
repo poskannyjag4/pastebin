@@ -7,6 +7,7 @@ use Database\Factories\PasteFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @property int $id
@@ -15,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $expires_at
  * @property string $visibility
  * @property string $programming_language
+ * @property UuidInterface|null $token
  * @property int|null $user_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -56,6 +58,6 @@ class Paste extends Model
     /**
      * @var list<string>
      */
-    protected $fillable = ['user_id', 'title', 'text', 'expires_at', 'visibility', 'programming_language'];
+    protected $fillable = ['user_id', 'title', 'text', 'expires_at', 'visibility', 'programming_language', 'token'];
 
 }

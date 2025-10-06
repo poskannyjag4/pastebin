@@ -8,18 +8,23 @@ use App\Models\Paste;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Ramsey\Uuid\UuidInterface;
+
 /**
  * @phpstan-type PasteCreationData array{
  * title: string,
  * text: string,
  * visibility: VisibilityEnum|string,
  * expires_at: Carbon|null,
- * programming_language: LanguageEnum|string
+ * programming_language: LanguageEnum|string,
+ * token: UuidInterface|null
  * }
  */
 class PasteRepository
 {
     /**
+     * Возвращает 10 последних паст
+     *
      * @return Collection|Paste[]
      */
     public function getLatestPastes(): Collection
@@ -31,6 +36,8 @@ class PasteRepository
     }
 
     /**
+     * Возвращает 10 последних паст текущего пользователя
+     *
      * @param int $userId
      * @return Collection|Paste[]
      */
@@ -58,9 +65,19 @@ class PasteRepository
 
     /**
      * @param int $id
-     * @return Paste
+     * @return Paste|null
      */
-    public function get(int $id): Paste{
+    public function get(int $id): Paste|null
+    {
         return Paste::find($id);
+    }
+
+    /**
+     * @param string $token
+     * @return Paste|null
+     */
+    public function getByToken(string $token): Paste|null
+    {
+        return Paste::where('token', '=', $token)->first();
     }
 }
