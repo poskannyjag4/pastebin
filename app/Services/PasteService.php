@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Repositories\PasteRepository;
 use Hashids\Hashids;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
@@ -170,5 +171,21 @@ class PasteService
         }
 
         return $paste;
+    }
+
+    /**
+     * @return LengthAwarePaginator<int, Paste>
+     */
+    public function getAllPastes(): LengthAwarePaginator
+    {
+        return $this->pasteRepository->getAllPastes();
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id){
+        return $this->pasteRepository->delete($id);
     }
 }

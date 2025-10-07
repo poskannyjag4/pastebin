@@ -1,0 +1,96 @@
+<?php
+
+namespace App\Orchid\Screens;
+
+use App\Models\User;
+use App\Services\UserService;
+use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Actions\DropDown;
+use Orchid\Screen\Actions\Link;
+use Orchid\Screen\Screen;
+use Orchid\Screen\TD;
+use Orchid\Support\Facades\Layout;
+use Orchid\Support\Facades\Toast;
+
+
+class UserListScreen extends Screen
+{
+    /**
+     * @param UserService $userService
+     */
+    public function __construct(
+        private readonly UserService $userService
+    )
+    {
+    }
+
+    /**
+     * Fetch data to be displayed on the screen.
+     *
+     * @return array<string, mixed>
+     */
+    public function query(): iterable
+    {
+        return [
+            'users' => $this->userService->getUsers(),
+        ];
+    }
+
+    /**
+     * The name of the screen displayed in the header.
+     *
+     * @return string|null
+     */
+    public function name(): ?string
+    {
+        return 'Список пользователей';
+    }
+
+    /**
+     * The screen's action buttons.
+     *
+     * @return \Orchid\Screen\Action[]
+     */
+    public function commandBar(): iterable
+    {
+        return [];
+    }
+
+    /**
+     * The screen's layout elements.
+     *
+     * @return \Orchid\Screen\Layout[]|string[]
+     */
+    public function layout(): iterable
+    {
+        return [
+            Layout::table('users', [
+                TD::make('id', 'ID'),
+                TD::make('name', 'Имя'),
+                TD::make('email', 'Почта'),
+                TD::make('is_banned', 'Бан'),
+                TD::make()->render(fn (User $user) =>
+                        Button::make('Забанить пользователя')
+        //                    ->icon('bubble')
+                            ->method('banUser')
+                            ->parameters(['userId' => $user->id]))
+            ])
+        ];
+    }
+
+    /**
+     * @param int $userId
+     * @return void
+     * @throws \Throwable
+     */
+    public function banUser(int $userId): void{
+        if($this->userService->ban($userId)){
+            Toast::success('Пользователь забанен!');
+        }
+        else{
+            Toast::error('Что-то пошло не так!');
+        }
+
+
+    }
+}

@@ -6,6 +6,7 @@ use App\DTOs\ComplaintDTO;
 use App\Models\Complaint;
 use App\Models\Paste;
 use App\Repositories\ComplaintRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 class ComplaintService
@@ -37,5 +38,13 @@ class ComplaintService
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return LengthAwarePaginator<int, Complaint>
+     */
+    public function getComplaints(): LengthAwarePaginator
+    {
+        return $this->complaintRepository->getComplaints();
     }
 }

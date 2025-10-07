@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Orchid\Screen\AsSource;
 
 /**
  * @property-read \App\Models\Paste|null $paste
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Complaint extends Model
 {
+    use AsSource;
+
     protected $table = 'complaints';
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>

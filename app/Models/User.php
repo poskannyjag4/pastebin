@@ -6,8 +6,11 @@ use Hashids\Hashids as HashidsAlias;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Orchid\Filters\Types\Like;
+use Orchid\Filters\Types\Where;
+use Orchid\Filters\Types\WhereDateStartEnd;
+use Orchid\Platform\Models\User as Authenticatable;
 
 /**
  * @property int $id
@@ -22,6 +25,7 @@ use Illuminate\Notifications\Notifiable;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Paste> $pastes
  * @property-read int|null $pastes_count
+ * @property boolean|null $is_banned
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
@@ -46,12 +50,10 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-
-
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var string[]
      */
     protected $fillable = [
         'name',
@@ -62,27 +64,49 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * The attributes excluded from the model's JSON form.
      *
-     * @var list<string>
+     * @var string[]
      */
     protected $hidden = [
         'password',
         'remember_token',
+        'permissions',
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast to native types.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'permissions'          => 'array',
+        'email_verified_at'    => 'datetime',
+    ];
+
+    /**
+     * @var string[]
+     */
+    protected $allowedFilters = [
+           'id'         => Where::class,
+           'name'       => Like::class,
+           'email'      => Like::class,
+           'updated_at' => WhereDateStartEnd::class,
+           'created_at' => WhereDateStartEnd::class,
+    ];
+
+    /**
+     * The attributes for which can use sort in url.
+     *
+     * @var string[]
+     */
+    protected $allowedSorts = [
+        'id',
+        'name',
+        'email',
+        'updated_at',
+        'created_at',
+    ];
 
     /**
      * @return HasMany<Paste, $this>
@@ -95,8 +119,10 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return HasMany<Complaint, $this>
      */
-    function complaints(): HasMany{
+    function complaints(): HasMany
+    {
         return $this->hasMany(Complaint::class, 'user_id');
     }
 }
+
 

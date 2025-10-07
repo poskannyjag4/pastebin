@@ -7,6 +7,7 @@ use Database\Factories\PasteFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Orchid\Screen\AsSource;
 use Ramsey\Uuid\UuidInterface;
 
 /**
@@ -44,7 +45,7 @@ class Paste extends Model
 {
 
     /** @use HasFactory<\Database\Factories\PasteFactory> */
-    use HasFactory;
+    use HasFactory, AsSource;
 
     /**
      * @return BelongsTo<User, $this>

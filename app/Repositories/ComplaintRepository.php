@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Complaint;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ComplaintRepository
 {
@@ -16,5 +17,13 @@ class ComplaintRepository
      */
     public function create(array $data): ?Complaint{
         return Complaint::create($data);
+    }
+
+    /**
+     * @return LengthAwarePaginator<int, Complaint>
+     */
+    public function getComplaints(): LengthAwarePaginator
+    {
+        return Complaint::with(['user', 'paste'])->paginate(15);
     }
 }

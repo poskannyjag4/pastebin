@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Ramsey\Uuid\UuidInterface;
 
 /**
@@ -92,5 +93,25 @@ class PasteRepository
             $query->where('expires_at', '>', Carbon::now())
                   ->orWhere('expires_at', '=', null);
         })->simplePaginate(10);
+    }
+
+    /**
+     * @return LengthAwarePaginator<int, Paste>
+     */
+    public function getAllPastes(): LengthAwarePaginator
+    {
+        return Paste::with('user')->paginate(15);
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id): bool{
+        if(Paste::destroy($id)>0){
+            return true;
+        }
+        return false;
+
     }
 }
