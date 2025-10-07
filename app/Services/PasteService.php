@@ -154,4 +154,21 @@ class PasteService
         }
         return compact('pastes', 'hashIds');
     }
+
+    /**
+     * Возвращает пасту по неопределенному указателю
+     * @param string $identifier
+     * @return Paste
+     */
+    public function getByIdentifier(string $identifier): Paste
+    {
+        if(Str::isUuid($identifier)){
+            $paste = $this->getUnlisted($identifier);
+        }
+        else{
+            $paste = $this->get($identifier);
+        }
+
+        return $paste;
+    }
 }

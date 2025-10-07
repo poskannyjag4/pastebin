@@ -30,3 +30,9 @@ Route::controller(PasteController::class)->name('paste.')->group(function () {
     Route::get('/s/{uuid}', 'share')->name('share');
     Route::get('/{hashId}', 'show')->name('show');
 });
+Route::controller(\App\Http\Controllers\ComplaintController::class)->name('complaint.')->group(function () {
+    Route::get('/s/{uuid}/complaint', 'show')->name('showUuid');
+    Route::get('/{hashId}/complaint', 'show')->name('showHashId');
+    Route::post('/s/{uuid}/complaint', 'store')->name('storeUuid');
+    Route::post('/{hashId}/complaint', 'store')->name('storeHashId');
+});

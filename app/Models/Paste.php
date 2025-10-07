@@ -35,6 +35,9 @@ use Ramsey\Uuid\UuidInterface;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereUsersId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereVisibility($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereUserId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Complaint> $complaints
+ * @property-read int|null $complaints_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereToken($value)
  * @mixin \Eloquent
  */
 class Paste extends Model
@@ -50,6 +53,14 @@ class Paste extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Complaint, $this>
+     */
+    public function complaints(): \Illuminate\Database\Eloquent\Relations\HasMany{
+        return $this->hasMany(Complaint::class, 'paste_id');
+    }
+
 
     /**
      * @var string

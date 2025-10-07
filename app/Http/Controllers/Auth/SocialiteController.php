@@ -13,6 +13,9 @@ use Str;
 
 class SocialiteController extends Controller
 {
+    /**
+     * @param AuthService $authService
+     */
     public function __construct(
         private readonly AuthService $authService
     )

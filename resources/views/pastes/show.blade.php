@@ -22,6 +22,7 @@
                 Скопировать ссылку
             </button>
             <button id="copyContentButton" class="action-button">Копировать содержимое</button>
+            <a href="@if(Route::currentRouteName() == 'paste.share') {{route('complaint.storeUuid', $identifier)}} @else {{route('complaint.storeHashId', $identifier)}} @endif" class="action-btn report-btn">Пожаловаться</a>
         </div>
         <div class="paste-code-block">
             <pre><code class="language-{{$paste->programming_language}}">{{ $paste->text }}</code></pre>

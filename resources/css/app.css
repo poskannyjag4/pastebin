@@ -541,9 +541,15 @@ tbody tr:last-child td {
 
 
 .github-btn {
-    background-color: #24292e;
+    background-color: #315467;
 }
 
 .google-btn {
     background-color: #DB4437;
+}
+.report-paste-info {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color-secondary);
 }

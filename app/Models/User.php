@@ -34,6 +34,12 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
+ * @property string|null $provider_name
+ * @property string|null $provider_id
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Complaint> $complaints
+ * @property-read int|null $complaints_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereProviderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereProviderName($value)
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements MustVerifyEmail
@@ -84,6 +90,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function pastes(): HasMany
     {
         return $this->hasMany(Paste::class, 'user_id');
+    }
+
+    /**
+     * @return HasMany<Complaint, $this>
+     */
+    function complaints(): HasMany{
+        return $this->hasMany(Complaint::class, 'user_id');
     }
 }
 
