@@ -1,0 +1,13 @@
+POST http://localhost:92/api/pastes
+Content-Type: application/json
+
+{
+    "title": "title",
+    "text": "tesxttexttext",
+    "programming_language": "plaintext",
+    "visibility": "public",
+    "expires_at": "never"
+}
+
+###
+
