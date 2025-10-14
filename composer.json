@@ -13,7 +13,8 @@
         "laravel/socialite": "^5.23",
         "laravel/tinker": "^2.10.1",
         "orchid/platform": "*",
-        "scrivo/highlight.php": "^9.18"
+        "scrivo/highlight.php": "^9.18",
+        "spatie/laravel-data": "^4.17"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.6",

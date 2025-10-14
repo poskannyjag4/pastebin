@@ -21,7 +21,7 @@ class PasteController extends Controller
     ){}
 
     /**
-     *
+     * Показывает форму добавления пасты
      *
      * @return Factory|View|\Illuminate\View\View
      */
@@ -31,6 +31,8 @@ class PasteController extends Controller
     }
 
     /**
+     * Сохраняет пасту в бд
+     * 
      * @param PasteStoreRequest $request
      * @return RedirectResponse
      */
@@ -50,6 +52,8 @@ class PasteController extends Controller
     }
 
     /**
+     * Показывает пасту
+     * 
      * @param string $hashId
      * @return View
      */
@@ -62,6 +66,13 @@ class PasteController extends Controller
         return view('pastes.show', $pastes);
     }
 
+    /**
+     * Показывает пасту по секретной ссылке
+     * 
+     * @param string $uuid
+     * @return View
+     */
+
     public function share(string $uuid): View{
         $paste = $this->pasteService->getUnlisted($uuid);
         $pastes = $this->pasteService->getDataForLayout();
@@ -70,12 +81,15 @@ class PasteController extends Controller
         return view('pastes.show', $pastes);
     }
 
+    /**
+     * Показывает список паст пользователя с пагинацией
+     * 
+     * @return View
+     */
     public function showUserPastes(): View
     {
         $latestPastes = $this->pasteService->getDataForLayout();
         $userPastes = $this->pasteService->getUserPastes();
         return view('pastes.user-pastes', [...$userPastes, ...$latestPastes]);
-
-
     }
 }
