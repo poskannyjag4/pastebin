@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\DTOs\CreatedPasteDTO;
+use App\DTOs\LatestPastesDTO;
 use App\DTOs\PasteDTO;
+use App\DTOs\PasteForLatestDTO;
 use App\Enums\ExpirationEnum;
 use App\Enums\LanguageEnum;
 use App\Enums\VisibilityEnum;
@@ -42,6 +44,7 @@ class PasteService
      */
     public function getDataForLayout(): array
     {
+
         $latestPastes = $this->pasteRepository->getLatestPastes()->mapWithKeys(
             function (Paste $paste) {
                 return [$this->hashids->encode($paste->id) => $paste];
@@ -57,6 +60,33 @@ class PasteService
         }
 
         return compact('latestPastes', 'latestUserPastes');
+    }
+
+    /**
+     * @return LatestPastesDTO
+     */
+    public function getLatestPastes(): LatestPastesDTO{
+        $latestPastes = $this->pasteRepository->getLatestPastes()->mapWithKeys(
+            function (Paste $paste) {
+                return [$this->hashids->encode($paste->id) => $paste];
+            }
+        );
+
+        return LatestPastesDTO::fromArray($latestPastes);
+    }
+
+    /**
+     * @param int $id
+     * @return LatestPastesDTO
+     */
+    public function getLatestUserPastes(int $id): LatestPastesDTO{
+        $latestUserPastes = $this->pasteRepository->getLatestUserPastes($id)->mapWithKeys(
+            function (Paste $paste) {
+                return [$this->hashids->encode($paste->id) => $paste];
+            }
+        );;
+
+        return LatestPastesDTO::fromArray($latestUserPastes);
     }
 
     /**
