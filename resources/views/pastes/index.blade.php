@@ -51,9 +51,9 @@
             <div class="form-group">
                 <label for="expires_at">Срок действия:</label>
                 <select id="expires_at" name="expires_at" class="@error('expires_at') is-invalid @enderror">
-                    @foreach(\App\Enums\ExpirationEnum::cases() as $expiration)
+                    {{-- @foreach(\App\Enums\ExpirationEnum::cases() as $expiration)
                         <option value="{{$expiration->name}}" @selected(old('expires_at') == $expiration->name)>{{$expiration->value}}</option>
-                    @endforeach
+                    @endforeach --}}
                 </select>
                 @error('expires_at')
                 <div class="error-message">{{ $message }}</div>
@@ -83,6 +83,10 @@
 
 @push('scripts')
     <script>
+        const month = 40320;
+        const week = 10080;
+        const day = 1440;
+        const hour = 60;
         const textarea = document.getElementById('pasteContent');
 
         function autoResize() {
@@ -97,5 +101,50 @@
                 autoResize.call(textarea);
             }
         });
+
+        function parseExpiration(expiration){
+            console.log(expiration/10080);
+            if(expiration == 0)
+                return 'Никогда';
+
+            if(expiration%week == 0){
+                let curWeeks = expiration/week;
+                if(curWeeks == 1)
+                    return curWeeks + ' неделя';
+                if(curWeeks >3){
+                    if(curWeeks == 4)
+                        return curWeeks/4 + ' месяц';
+                    else
+                        return curWeeks + ' месяцев'
+                }
+                return curWeeks + ' недель'
+            }
+
+            if(expiration%day == 0){
+                let curDays = expiration/day;
+                if(curDays == 1)
+                    return curDays + ' день';
+                return curDays + ' дней';
+            }
+            if(expiration%hour == 0){
+                let curHours = expiration/hour;
+                if(curHours == 1)
+                    return curHours + ' час';
+                return curHours + ' часов'
+            }
+            
+            return expiration + ' минут';
+        }
+
+        const possibleValues = [0, 10, 60, 180, 1440, 10080, 40320]; //Возможные варианты истечения пасты в минутах
+        let expirationSelect = document.getElementById('expires_at');
+        possibleValues.forEach(element => {
+            let option = document.createElement('option');
+            console.log(element);
+            option.value = element;
+            option.innerText = parseExpiration(element);
+            expirationSelect.appendChild(option);
+        });
+        
     </script>
 @endpush
