@@ -63,6 +63,8 @@ class PasteService
     }
 
     /**
+     * Возвращает список из 10 последних публичных паст
+     * 
      * @return LatestPastesDTO
      */
     public function getLatestPastes(): LatestPastesDTO{
@@ -76,6 +78,8 @@ class PasteService
     }
 
     /**
+     * Возвращает список из 10 последних паст пользователя
+     * 
      * @param int $id
      * @return LatestPastesDTO
      */
@@ -92,23 +96,13 @@ class PasteService
     /**
      * Создает новую пасту и создает для нее hashid
      *
-     *
      * @param PasteDTO $data
      * @return string
      */
-    public function store(PasteDTO $data): string
+    public function store(PasteDTO $data, ): string
     {
         $expires_at = ExpirationEnum::hoursFromName($data->expires_at);
-        /**
-         * @var array{
-         *  title: string,
-         *  text: string,
-         *  visibility: \Carbon\Carbon|string,
-         *  expires_at: Carbon|null,
-         *  programming_language: LanguageEnum|string,
-         *  token: UuidInterface|null
-         *  } $dataForPaste
-         */
+
         $dataForPaste = [
             'title' => $data->title,
             'text' => $data->text,
@@ -118,13 +112,12 @@ class PasteService
             'programming_language' => $data->programming_language,
             'token' => $data->visibility == VisibilityEnum::unlisted->name ? Str::uuid() : null
         ];
-        /**
-         * @var ?User $user
-         */
+
+
+        //TODO: решить как как передавать пользователя
+        //TODO: решить где вызывать создание пасты в репе или здесь?
         $user = Auth::user();
-        /**
-         * @var Paste $paste
-         */
+
         $paste = $this->pasteRepository->create($dataForPaste, $user);
         if(!is_null($paste->token)){
             return $paste->token;

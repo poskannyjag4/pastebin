@@ -21,7 +21,7 @@ services:
       - PHP_WORKER_INSTALL_BCMATH=true
     volumes:
       - ./:/application
-      - ./sourcefiles/php-fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+      # - ./sourcefiles/php-fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
     networks:
       - internal
   pgsql:

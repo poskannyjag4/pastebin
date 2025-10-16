@@ -19,6 +19,10 @@ class LatestPastesDTO extends Dto
     {
     }
 
+    /**
+     * @param Collection<string, Paste> $pastes
+     * @return LatestPastesDTO
+     */
     public static function fromArray(Collection $pastes): self{
         $latestPastes = $pastes->mapInto(PasteForLatestDTO::class)->toArray();
         return new self($latestPastes);
