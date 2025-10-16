@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\PasteDTO;
+use App\DTOs\PasteStoreDTO;
 use App\Http\Requests\PasteStoreRequest;
 use App\Services\PasteService;
 use Illuminate\Contracts\View\Factory;
@@ -43,7 +44,8 @@ class PasteController extends Controller
      * @param PasteStoreRequest $request
      * @return RedirectResponse
      */
-    public function store(PasteStoreRequest $request): RedirectResponse{
+    public function store(PasteStoreDTO $request): RedirectResponse{
+        dd($request);
         $validated = $request->toDTO();
         try {
             $identifier = $this->pasteService->store($validated);

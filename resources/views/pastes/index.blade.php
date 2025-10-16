@@ -113,7 +113,7 @@
                     return curWeeks + ' неделя';
                 if(curWeeks >3){
                     if(curWeeks == 4)
-                        return curWeeks/4 + ' месяц';
+                        return curWeeks + ' месяц';
                     else
                         return curWeeks + ' месяцев'
                 }

@@ -114,8 +114,8 @@ class PasteService
         ];
 
 
-        //TODO: решить как как передавать пользователя
-        //TODO: решить где вызывать создание пасты в репе или здесь?
+        
+
         $user = Auth::user();
 
         $paste = $this->pasteRepository->create($dataForPaste, $user);
