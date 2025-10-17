@@ -45,6 +45,26 @@ use Orchid\Platform\Models\User as Authenticatable;
  * @property-read int|null $complaints_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereProviderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereProviderName($value)
+ * @property array<array-key, mixed>|null $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Orchid\Platform\Models\Role> $roles
+ * @property-read int|null $roles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read int|null $tokens_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User averageByDays(string $value, $startDate = null, $stopDate = null, ?string $dateColumn = null)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User byAccess(string $permitWithoutWildcard)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User byAnyAccess($permitsWithoutWildcard)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User countByDays($startDate = null, $stopDate = null, ?string $dateColumn = null)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User countForGroup(string $groupColumn)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User defaultSort(string $column, string $direction = 'asc')
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User filters(?mixed $kit = null, ?\Orchid\Filters\HttpFilter $httpFilter = null)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User filtersApply($filters = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User filtersApplySelection($class)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User maxByDays(string $value, $startDate = null, $stopDate = null, ?string $dateColumn = null)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User minByDays(string $value, $startDate = null, $stopDate = null, ?string $dateColumn = null)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User sumByDays(string $value, $startDate = null, $stopDate = null, ?string $dateColumn = null)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User valuesByDays(string $value, $startDate = null, $stopDate = null, string $dateColumn = 'created_at')
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsBanned($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePermissions($value)
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements MustVerifyEmail

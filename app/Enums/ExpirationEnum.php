@@ -29,7 +29,6 @@ enum ExpirationEnum:int
             self::day => '1 день',
             self::week => '1 неделя',
             self::month => '1 месяц',
-            default => 'error'
         };
     }
 }

@@ -11,6 +11,18 @@ use Orchid\Screen\AsSource;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Complaint newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Complaint newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Complaint query()
+ * @property int $id
+ * @property string $details
+ * @property int|null $user_id
+ * @property int $paste_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Complaint whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Complaint whereDetails($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Complaint whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Complaint wherePasteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Complaint whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Complaint whereUserId($value)
  * @mixin \Eloquent
  */
 class Complaint extends Model

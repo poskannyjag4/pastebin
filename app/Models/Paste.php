@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Builders\PasteBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Database\Factories\PasteFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -39,6 +40,13 @@ use Ramsey\Uuid\UuidInterface;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Complaint> $complaints
  * @property-read int|null $complaints_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereToken($value)
+ * @method static PasteBuilder getLatest()
+ * @method static PasteBuilder getLatestPublic()
+ * @method static PasteBuilder getLatestUser(int $id)
+ * @method static PasteBuilder whereNotExpired()
+ * @method static PasteBuilder getByToken(string $uuid)
+ * @method static PasteBuilder getForUser(int $id)
+ * @method static PasteBuilder getPaginated(int $id)
  * @mixin \Eloquent
  */
 class Paste extends Model
@@ -71,5 +79,10 @@ class Paste extends Model
      * @var list<string>
      */
     protected $fillable = ['user_id', 'title', 'text', 'expires_at', 'visibility', 'programming_language', 'token'];
+
+    public function newEloquentBuilder($query): PasteBuilder
+    {
+        return new PasteBuilder($query);
+    }
 
 }

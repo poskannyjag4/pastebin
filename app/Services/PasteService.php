@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTOs\CreatedPasteDTO;
 use App\DTOs\LatestPastesDTO;
 use App\DTOs\PasteDTO;
+use App\DTOs\PasteForCreationDTO;
 use App\DTOs\PasteForLatestDTO;
 use App\DTOs\PasteStoreDTO;
 use App\Enums\ExpirationEnum;
@@ -69,11 +70,12 @@ class PasteService
      * @return LatestPastesDTO
      */
     public function getLatestPastes(): LatestPastesDTO{
-        $latestPastes = $this->pasteRepository->getLatestPastes()->mapWithKeys(
+        $latestPastes = Paste::getLatestPublic()->get()->mapWithKeys(
             function (Paste $paste) {
                 return [$this->hashids->encode($paste->id) => $paste];
             }
         );
+        
 
         return LatestPastesDTO::fromArray($latestPastes);
     }
@@ -85,7 +87,7 @@ class PasteService
      * @return LatestPastesDTO
      */
     public function getLatestUserPastes(int $id): LatestPastesDTO{
-        $latestUserPastes = $this->pasteRepository->getLatestUserPastes($id)->mapWithKeys(
+        $latestUserPastes = Paste::getLatestUser($id)->get()->mapWithKeys(
             function (Paste $paste) {
                 return [$this->hashids->encode($paste->id) => $paste];
             }
@@ -97,12 +99,12 @@ class PasteService
     /**
      * Создает новую пасту и создает для нее hashid
      *
-     * @param PasteDTO $data
+     * @param PasteStoreDTO $data
      * @return string
      */
     public function store(PasteStoreDTO $data, ?User $user): string
     {
-        $dataForPaste = [
+        $dataForPaste =[
             'title' => $data->title,
             'text' => $data->text,
             'visibility' => $data->visibility,
@@ -112,8 +114,13 @@ class PasteService
             'token' => $data->visibility == VisibilityEnum::unlisted->name ? Str::uuid() : null
         ];
 
- 
-        $paste = $this->pasteRepository->create($dataForPaste, $user);
+        if(is_null($user)){
+            $paste = Paste::create($dataForPaste);
+        }
+        else{
+            $paste = $user->pastes()->create($dataForPaste);
+        }
+        
         if(!is_null($paste->token)){
             return $paste->token;
         }
@@ -131,7 +138,7 @@ class PasteService
          * @var int $id
          */
         $id = $this->hashids->decode($hashId)[0];
-        $paste = $this->pasteRepository->get($id);
+        $paste = Paste::find($id);
         if(!is_null($paste->expires_at) && ($paste->expires_at < Carbon::now())){
             abort(404);
         }
@@ -148,7 +155,7 @@ class PasteService
      * @return Paste
      */
     public function getUnlisted(string $uuid): Paste{
-        $paste = $this->pasteRepository->getByToken($uuid);
+        $paste = Paste::getByToken($uuid);
         if(is_null($paste->expires_at) || $paste->expires_at < Carbon::now() || is_null($paste)){
             return $paste;
         }
@@ -161,12 +168,9 @@ class PasteService
      *     hashIds: string[]
      * }
      */
-    public function getUserPastes(): array
+    public function getUserPastes(int $id): array
     {
-        if(!Auth::check()){
-          abort(404);
-        }
-        $pastes = $this->pasteRepository->getUserPastes(Auth::id());
+        $pastes = Paste::getPaginated($id);
         $hashIds = [];
         foreach ($pastes->items() as $paste){
             $hashIds[] = $this->hashids->encode($paste->id);
@@ -196,7 +200,7 @@ class PasteService
      */
     public function getAllPastes(): LengthAwarePaginator
     {
-        return $this->pasteRepository->getAllPastes();
+        return Paste::getAll();
     }
 
     /**
@@ -204,6 +208,9 @@ class PasteService
      * @return bool
      */
     public function delete(int $id){
-        return $this->pasteRepository->delete($id);
+         if(Paste::destroy($id)>0){
+            return true;
+        }
+        return false;
     }
 }

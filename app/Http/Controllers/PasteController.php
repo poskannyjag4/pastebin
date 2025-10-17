@@ -66,6 +66,7 @@ class PasteController extends Controller
      */
     public function show(string $hashId): View
     {
+
         $paste = $this->pasteService->get($hashId);
 
         // Получение данных для 
@@ -90,6 +91,7 @@ class PasteController extends Controller
      */
 
     public function share(string $uuid): View{
+
         $paste = $this->pasteService->getUnlisted($uuid);
 
         // Получение данных для 
@@ -103,6 +105,7 @@ class PasteController extends Controller
         $pastes['latestUserPastes'] = $latestUserPastes;
         $pastes['paste'] = $paste;
         $pastes['identifier'] = $uuid;
+
         return view('pastes.show', $pastes);
     }
 
@@ -113,6 +116,7 @@ class PasteController extends Controller
      */
     public function showUserPastes(): View
     {
+        
         // Получение данных для 
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
@@ -121,7 +125,7 @@ class PasteController extends Controller
         }
         $pastes['latestPastes'] = $latestPastes;
         $pastes['latestUserPastes'] = $latestUserPastes;
-        $userPastes = $this->pasteService->getUserPastes();
+        $userPastes = $this->pasteService->getUserPastes(Auth::id());
         return view('pastes.user-pastes', [...$userPastes, ...$pastes]);
     }
 }

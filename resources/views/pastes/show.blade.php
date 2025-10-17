@@ -43,7 +43,7 @@
             let urlToCopy = '';
 
             if (accessType === 'unlisted') {
-                urlToCopy = `${window.location.origin}/s/${identifier}`;
+                urlToCopy = `${window.location.origin}/p/s/${identifier}`;
             } else {
                 urlToCopy = `${window.location.origin}/${identifier}`;
             }
