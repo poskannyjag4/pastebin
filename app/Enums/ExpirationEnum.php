@@ -2,30 +2,34 @@
 
 namespace App\Enums;
 
-enum ExpirationEnum:string
+enum ExpirationEnum:int
 {
-    case never = 'Никогда';
-    case minutes = '10 минут';
-    case hour = '1 час';
-    case hours = '3 часа';
-    case day = '1 день';
-    case week = '1 неделя';
-    case month = '1 месяц';
+    case never = 0;
+    case minutes = 600;
+    case hour = 3600;
+    case hours = 10800;
+    case day = 86400;
+    case week = 604800;
+    case month = 2419200;
+
+
 
     /**
-     * @param string $name
-     * @return float
+     * Парсит количество секунд в человекопонятную строку
+     * 
+     * @param ExpirationEnum $expiration
+     * @return string
      */
-    public static function hoursFromName(string $name): float{
-        return match ($name){
-            self::never->name =>0,
-            self::hour->name => 1,
-            self::minutes->name => 1/60,
-            self::hours->name => 3,
-            self::day->name => 24,
-            self::week->name => 168,
-            self::month->name => 744,
-            default => throw new \InvalidArgumentException("Invalid expiration type"),
+    public static function toHumanString(self $expiration): string{
+        return match ($expiration){
+            self::never => 'Никогда',
+            self::minutes => '10 минут',
+            self::hour => '1 час',
+            self::hours => '3 часа',
+            self::day => '1 день',
+            self::week => '1 неделя',
+            self::month => '1 месяц',
+            default => 'error'
         };
     }
 }

@@ -41,14 +41,12 @@ class PasteController extends Controller
     /**
      * Сохраняет пасту в бд
      * 
-     * @param PasteStoreRequest $request
+     * @param PasteStoreDTO $request
      * @return RedirectResponse
      */
     public function store(PasteStoreDTO $request): RedirectResponse{
-        dd($request);
-        $validated = $request->toDTO();
         try {
-            $identifier = $this->pasteService->store($validated);
+            $identifier = $this->pasteService->store($request, Auth::user());
         }
         catch (\InvalidArgumentException $e){
             return redirect()->back()->withInput()->withErrors(['expires_at' => 'Выбрано недопустимое время истечения. Пожалуйста, выберите значение из списка.']);

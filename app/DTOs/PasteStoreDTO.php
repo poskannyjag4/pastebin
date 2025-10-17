@@ -13,11 +13,9 @@ class PasteStoreDTO extends Dto
     public function __construct(
         public readonly string $text,
         public readonly string $title,
-        #[WithCast(EnumCast::class)]
-        public readonly LanguageEnum $programming_language,
+        public readonly string $programming_language,
         public readonly int $expires_at,
-        #[WithCast(EnumCast::class)]
-        public readonly VisibilityEnum $visibility,
+        public readonly string $visibility,
     )
     {
     }

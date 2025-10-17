@@ -6,6 +6,7 @@ use App\DTOs\CreatedPasteDTO;
 use App\DTOs\LatestPastesDTO;
 use App\DTOs\PasteDTO;
 use App\DTOs\PasteForLatestDTO;
+use App\DTOs\PasteStoreDTO;
 use App\Enums\ExpirationEnum;
 use App\Enums\LanguageEnum;
 use App\Enums\VisibilityEnum;
@@ -99,25 +100,19 @@ class PasteService
      * @param PasteDTO $data
      * @return string
      */
-    public function store(PasteDTO $data, ): string
+    public function store(PasteStoreDTO $data, ?User $user): string
     {
-        $expires_at = ExpirationEnum::hoursFromName($data->expires_at);
-
         $dataForPaste = [
             'title' => $data->title,
             'text' => $data->text,
             'visibility' => $data->visibility,
-            'expires_at' => $expires_at == 0 ?  null : Carbon::now()->
-            addHours($expires_at),
+            'expires_at' => $data->expires_at == 0 ?  null : Carbon::now()->
+            addSeconds($data->expires_at),
             'programming_language' => $data->programming_language,
             'token' => $data->visibility == VisibilityEnum::unlisted->name ? Str::uuid() : null
         ];
 
-
-        
-
-        $user = Auth::user();
-
+ 
         $paste = $this->pasteRepository->create($dataForPaste, $user);
         if(!is_null($paste->token)){
             return $paste->token;
