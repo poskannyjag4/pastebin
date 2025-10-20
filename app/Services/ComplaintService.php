@@ -29,11 +29,12 @@ class ComplaintService
      */
     public function store(ComplaintDTO $data, string $identifier): bool{
         $paste = $this->pasteService->getByIdentifier($identifier);
-        $complaint = $this->complaintRepository->create([
+        $complaint = Complaint::create([
             'details' => $data->details,
             'paste_id' => $paste->id,
             'user_id' => Auth::check() ? Auth::user()->id : null,
         ]);
+
         if(is_null($complaint)){
             return false;
         }
@@ -45,6 +46,6 @@ class ComplaintService
      */
     public function getComplaints(): LengthAwarePaginator
     {
-        return $this->complaintRepository->getComplaints();
+        return Complaint::with(['user', 'paste'])->paginate(15);
     }
 }

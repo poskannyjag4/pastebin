@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Throwable;
 
@@ -20,13 +21,17 @@ class UserService
 
     /**
      * @param int $userId
-     * @return bool
+     * @return void
+     * @throws \Exception
+     * @throws ModelNotFoundException<User>
      */
-    public function ban(int $userId): bool{
-       if($this->userRepository->ban($userId)){
-           return true;
-       }
-       return false;
+    public function ban(int $userId): void{
+           $user = User::findOrFail($userId);
+
+           $user->is_banned = true;
+           if(!$user->save()){
+               throw new \Exception("Произошла ошибка!");
+           }
     }
 
     /**

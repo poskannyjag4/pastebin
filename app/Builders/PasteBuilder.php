@@ -60,24 +60,9 @@ class PasteBuilder extends Builder{
 
     /**
      * @param string $uuid
-     * @return ?Paste
+     * @return PasteBuilder
      */
-    public function getByToken(string $uuid): ?Paste{
-        return $this->where('token', $uuid)->first();
-    }
-
-    /**
-     * @param int $id
-     * @return Paginator<int, Paste>
-     */
-    public function getPaginated(int $id):Paginator{
-        return $this->getForUser($id)->simplePaginate(10);
-    }
-
-    /**
-     * @return LengthAwarePaginator<int, Paste>
-     */
-    public function getAll(): LengthAwarePaginator{
-        return $this->with('user')->paginate(15);
+    public function getByToken(string $uuid): self{
+        return $this->where('token', $uuid);
     }
 }

@@ -83,12 +83,20 @@ class PasteListScreen extends Screen
      */
     public function DeletePaste(int $id): void
     {
-        if($this->pasteService->delete($id)){
-            Toast::success('Паста удалена');
+        try{
+            if($this->pasteService->delete($id) == 0){
+                Toast::warning('Паста не была удалена, попробуйте снова!');
+            }
+            else{
+                Toast::success('Паста удалена!');
+
+            }
         }
-        else{
+        catch(\Exception $ex)
+        {
             Toast::error('Произошла ошибка!');
         }
+
     }
 
 

@@ -4,6 +4,7 @@ namespace App\Orchid\Screens;
 
 use App\Models\User;
 use App\Services\UserService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
@@ -84,13 +85,15 @@ class UserListScreen extends Screen
      * @throws \Throwable
      */
     public function banUser(int $userId): void{
-        if($this->userService->ban($userId)){
+        try{
+            $this->userService->ban($userId);
             Toast::success('Пользователь забанен!');
         }
-        else{
-            Toast::error('Что-то пошло не так!');
+        catch (ModelNotFoundException $ex){
+            Toast::error('Пользователь не найден!');
         }
-
-
+        catch (\Exception $ex){
+            Toast::error($ex->getMessage());
+        }
     }
 }
