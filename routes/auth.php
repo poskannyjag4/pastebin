@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -59,5 +60,5 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
 });
 
-Route::get('/auth/{provider}/redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
-Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
+Route::get('/auth/{provider}/redirect', [AuthController::class, 'redirect'])->name('socialite.redirect');
+Route::get('/auth/{provider}/callback', [AuthController::class, 'callback'])->name('socialite.callback');
