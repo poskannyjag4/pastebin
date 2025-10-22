@@ -30,6 +30,7 @@ class PasteController extends Controller
      */
     public function index(): Factory|View|\Illuminate\View\View{
 
+        dd(Auth::user()->tokens);
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
         if(Auth::check()){

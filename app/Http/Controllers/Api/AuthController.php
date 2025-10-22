@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTOs\ApiLoginDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Services\AuthService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -13,18 +15,19 @@ class AuthController extends Controller
      * @param AuthService $authService
      */
     public function __construct(
-        private AuthService $authService
+        private UserService $userService
     )
     {
     }
 
     /**
-     * @param LoginRequest $request
+     * @param ApiLoginDTO $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(LoginRequest $request){
+    public function login(ApiLoginDTO $request){
         try{
-            $token = $this->authService->loginUser($request->validated());
+            
+            $token = $this->userService->getToken($request);
             return response()->json(['token' => $token], 201);
         }
         catch (\Exception $exception){
