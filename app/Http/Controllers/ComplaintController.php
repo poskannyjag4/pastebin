@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\ComplaintDTO;
 use App\Http\Requests\ComplaintRequest;
 use App\Services\ComplaintService;
 use App\Services\PasteService;
@@ -9,6 +10,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ComplaintController extends Controller
@@ -35,19 +37,19 @@ class ComplaintController extends Controller
     }
 
     /**
-     * @param ComplaintRequest $request
+     * @param ComplaintDTO $request
      * @param string $identifier
      * @return RedirectResponse
+     * @throws \Exception
      */
-    function store(ComplaintRequest $request, string $identifier): RedirectResponse
+    function store(ComplaintDTO $request, string $identifier): RedirectResponse
     {
-        if($this->complaintService->store($request->toDTO(), $identifier)){
+        try {
+            $this->complaintService->store($request, $identifier, Auth::user());
             return redirect()->route('paste.home');
         }
-        $route = 'complaint.showHashId';
-        if(Str::isUuid($identifier)){
-            $route = 'complaint.showUuid';
+        catch (\Exception $exception){
+            return redirect()->back()->withErrors([$exception->getMessage()]);
         }
-        return redirect()->route($route, $identifier)->withErrors(['details' => 'Произошла ошибка! Повторите позже.']);
     }
 }

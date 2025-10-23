@@ -17,8 +17,8 @@
             @endauth
 
             @guest
-                <li><a href="{{ route('login') }}">Войти</a></li>
-                <li><a href="{{ route('register') }}">Регистрация</a></li>
+                <li><a href="{{ route('login.show') }}">Войти</a></li>
+                <li><a href="{{ route('register.show') }}">Регистрация</a></li>
             @endguest
         </ul>
     </nav>

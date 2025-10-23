@@ -2,11 +2,9 @@
 
 namespace App\Services;
 
-use App\DTOs\ApiLoginDTO;
 use App\DTOs\UserDTO;
 use App\Http\Resources\LoginResource;
 use App\Models\User;
-use App\Repositories\UserRepository;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -15,14 +13,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    /**
-     * @param UserRepository $userRepository
-     */
-    public function __construct(
-        private readonly UserRepository $userRepository
-    )
-    {
-    }
 
     /**
      * @param int $userId
@@ -44,31 +34,20 @@ class UserService
      */
     public function getUsers(): LengthAwarePaginator
     {
-        return $this->userRepository->getUsers();
+        return User::paginate(15);
     }
 
-    
+    /**
+     * @param User $user
+     * @return void
+     */
     public function generateToken(User $user): void{
 
         if($user->tokens->where('name', 'access_token')->count() !=0){
             $user->tokens();
         }
-        $user->createToken('accesss_token');
-        return;
+        $user->createToken('access_token');
     }
 
-    public function getUserByLogin(ApiLoginDTO $data){
-         $user = User::whereEmail($data->email)->first();
 
-         
-        if(is_null($user)){
-            throw new Exception('Пользователь не найден!');
-        }
-
-        if($data->password != $user->password){
-            throw new Exception('Пользователь не найден!');
-        }
-        
-        return $user;
-    }
 }

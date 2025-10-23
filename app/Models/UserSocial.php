@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSocial newModelQuery()
@@ -26,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserSocial extends Model
 {
     /**
-     * @var string[]
+     * @var list<string>
      */
     protected $fillable = ['provider_name', 'provider_id', 'user_id'];
 
@@ -35,7 +36,8 @@ class UserSocial extends Model
     /**
      * @return BelongsTo<User, $this>
      */
-    public function user(){
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\DTOs\CreatedPasteDTO;
+
 use App\DTOs\LatestPastesDTO;
 use App\DTOs\PasteDTO;
 use App\DTOs\PasteForCreationDTO;

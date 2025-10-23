@@ -6,18 +6,15 @@ use App\DTOs\ComplaintDTO;
 use App\Models\Complaint;
 use App\Models\Paste;
 use App\Models\User;
-use App\Repositories\ComplaintRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 class ComplaintService
 {
     /**
-     * @param ComplaintRepository $complaintRepository
      * @param PasteService $pasteService
      */
     public function __construct(
-        private readonly ComplaintRepository $complaintRepository,
         private readonly PasteService $pasteService
     )
     {
@@ -27,21 +24,16 @@ class ComplaintService
      * @param ComplaintDTO $data
      * @param string $identifier
      * @param User|null $user
-     * @return void
+     * @return Complaint
      * @throws \Exception
      */
     public function store(ComplaintDTO $data, string $identifier, ?User $user): Complaint{
         $paste = $this->pasteService->getByIdentifier($identifier);
-        $complaint = Complaint::create([
+        return Complaint::create([
             'details' => $data->details,
             'paste_id' => $paste->id,
             'user_id' => $user->id ?? null,
         ]);
-
-        if(is_null($complaint)){
-            throw new \Exception('Произошла ошибка');
-        }
-        return $complaint;
 
     }
 

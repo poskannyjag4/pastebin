@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Database\Factories\PasteFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Orchid\Screen\AsSource;
 use Ramsey\Uuid\UuidInterface;
@@ -64,9 +65,9 @@ class Paste extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Complaint, $this>
+     * @return HasMany<Complaint, $this>
      */
-    public function complaints(): \Illuminate\Database\Eloquent\Relations\HasMany{
+    public function complaints(): HasMany{
         return $this->hasMany(Complaint::class, 'paste_id');
     }
 

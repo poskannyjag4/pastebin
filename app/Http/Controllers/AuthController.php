@@ -6,6 +6,8 @@ use App\DTOs\LoginDTO;
 use App\DTOs\RegisterDTO;
 use App\Models\User;
 use App\Models\UserSocial;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,20 +16,34 @@ use Illuminate\Support\Str;
 use JetBrains\PhpStorm\NoReturn;
 use Laravel\Socialite\Contracts\User as ContractsUser;
 use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\RedirectResponse as SocialiteRedirectResponse;
 
 class AuthController extends Controller
 {
-    public function __construct(){}
 
-    public function showLoginForm(){
+    /**
+     * @return View
+     */
+    public function showLoginForm(): View
+    {
         return view('auth.login');
     }
 
-    public function showRegisterForm(){
+    /**
+     * @return View
+     */
+    public function showRegisterForm(): View
+    {
+
         return view('auth.register');
     }
 
-    public function register(RegisterDTO $request){
+    /**
+     * @param RegisterDTO $request
+     * @return RedirectResponse
+     */
+    public function register(RegisterDTO $request): RedirectResponse
+    {
 
         $user = User::create([
             'name' => $request->name,
@@ -40,17 +56,30 @@ class AuthController extends Controller
         return redirect()->intended('/');
     }
 
-    public function login(LoginDTO $request){
+    /**
+     * @param LoginDTO $request
+     * @return RedirectResponse
+     */
+    public function login(LoginDTO $request): RedirectResponse
+    {
         return redirect()->intended('/');
     }
 
-    public function logout(){
+    /**
+     * @return RedirectResponse
+     */
+    public function logout(): RedirectResponse
+    {
         Auth::logout();
 
         return redirect()->route('paste.home');
     }
 
-    public function redirect(string $provider)
+    /**
+     * @param string $provider
+     * @return SocialiteRedirectResponse
+     */
+    public function redirect(string $provider): SocialiteRedirectResponse
     {
         return Socialite::driver($provider)->redirect();
     }
@@ -63,13 +92,13 @@ class AuthController extends Controller
     {
         try {
             $socialUser = Socialite::driver($provider)->user();
-            
+
             $newUserSocial = new UserSocial();
             $newUserSocial->provider_id = $socialUser->getId();
             $newUserSocial->provider_name = $provider;
 
             $user = User::whereEmail($socialUser->getEmail())->first();
-            
+
             $userSocial = [
                     'provider_name' => $provider,
                     'provider_id' => $socialUser->getId()
@@ -79,14 +108,14 @@ class AuthController extends Controller
                     Auth::login($user);
                     return redirect()->route('paste.home');
                 }
-                
+
                 $newUserSocial->user()->associate($user);
                 $newUserSocial->save();
 
                 Auth::login($user);
                 return redirect('/');
             }
-                
+
             $user = User::create([
                 'name' => $socialUser->getNickname(),
                 'email' => $socialUser->getEmail()
@@ -99,7 +128,7 @@ class AuthController extends Controller
 
             return redirect('/');
         } catch (\Exception $e) {
-            return redirect()->route('login')->with('email', 'Что-то пошло не так при входе через ' . $provider);
+            return redirect()->route('login.show')->with('email', 'Что-то пошло не так при входе через ' . $provider);
         }
     }
 }

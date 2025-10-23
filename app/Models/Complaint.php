@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Orchid\Screen\AsSource;
 
 /**
@@ -31,17 +32,17 @@ class Complaint extends Model
 
     protected $table = 'complaints';
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return BelongsTo<User, $this>
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Paste, $this>
+     * @return BelongsTo<Paste, $this>
      */
-    public function paste(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function paste(): BelongsTo
     {
         return $this->belongsTo('App\Models\Paste', 'paste_id');
     }
