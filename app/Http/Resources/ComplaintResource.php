@@ -2,16 +2,16 @@
 
 namespace App\Http\Resources;
 
-use App\DTOs\PasteDTO;
+use App\Models\Complaint;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\Paste;
-use App\Http\Resources\UserResource;
+use App\Models\User;
+
 
 /**
- * @mixin PasteDTO
+ * @mixin Complaint
  */
-class PasteResource extends JsonResource
+class ComplaintResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,8 +21,8 @@ class PasteResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'paste' => $this->paste,
-            'identifier' => $this->identifier
+            'details' => $this->details,
+            'user' => $this->user,
         ];
     }
 }

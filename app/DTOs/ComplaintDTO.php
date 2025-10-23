@@ -2,26 +2,18 @@
 
 namespace App\DTOs;
 
-class ComplaintDTO
+use Spatie\LaravelData\Dto;
+
+class ComplaintDTO extends Dto
 {
     /**
      * @param string $details
      */
     public function __construct(
-        public string $details,
+        public readonly string $details,
     )
     {
     }
 
-    /**
-     * @param array{
-     *     details: string
-     * } $data
-     * @return ComplaintDTO
-     */
-    public static function fromArray(array $data): ComplaintDTO{
-        return new ComplaintDTO(
-            details: $data['details'],
-        );
-    }
+
 }

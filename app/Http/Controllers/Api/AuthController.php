@@ -7,8 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\LoginResource;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Services\AuthService;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -24,11 +26,10 @@ class AuthController extends Controller
 
     /**
      * @param ApiLoginDTO $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return string|JsonResponse
      */
     public function login(ApiLoginDTO $request){
         try{
-           
             $user = $this->userService->getUserByLogin($request);
             $token = $user->createToken('api')->plainTextToken;
             info($token);

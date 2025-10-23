@@ -3,7 +3,7 @@
     <ul class="paste-list">
         @forelse ($latestPastes->latestPastes as $paste)
             <li>
-                <a href="{{ route('paste.show', $paste->hashId) }}">{{ $paste->paste->title ?? 'Без названия' }}</a>
+                <a href="{{ route('paste.show', $paste->identifier) }}">{{ $paste->paste->title ?? 'Без названия' }}</a>
                 <span>{{ $paste->paste->programming_language }} | {{ $paste->paste->created_at->diffForHumans() }}</span>
             </li>
         @empty
@@ -21,7 +21,7 @@
         <ul class="paste-list">
             @forelse ($latestUserPastes->latestPastes as $paste)
                 <li>
-                    <a href="{{ route('paste.show', $paste->hashId) }}">{{ $paste->paste->title ?? 'Без названия' }}</a>
+                    <a href="{{ route('paste.show', $paste->identifier) }}">{{ $paste->paste->title ?? 'Без названия' }}</a>
                     <span>{{ $paste->paste->programming_language }} | {{ $paste->paste->created_at->diffForHumans() }}</span>
                 </li>
             @empty

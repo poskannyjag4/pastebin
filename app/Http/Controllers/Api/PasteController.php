@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTOs\ComplaintDTO;
+use App\DTOs\PasteDTO;
 use App\DTOs\PasteStoreDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ComplaintRequest;
 use App\Http\Requests\PasteStoreRequest;
+use App\Http\Resources\ComplaintResource;
 use App\Http\Resources\PasteResource;
+use App\Models\Complaint;
+use App\Models\User;
 use App\Services\ComplaintService;
 use App\Services\PasteService;
 use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -26,13 +32,18 @@ class PasteController extends Controller
 
     /**
      * @param PasteStoreDTO $data
-     * @return JsonResponse
+     * @return PasteResource|JsonResponse
      */
     public function store(PasteStoreDTO $data){
         try {
            $identifier = $this->pasteService->store($data, Auth::user());
+
            $paste = $this->pasteService->getByIdentifier($identifier);
-           return new PasteResource($paste);
+
+           return new PasteResource(PasteDTO::from([
+               'paste' => $paste,
+               'identifier' => $identifier,
+           ]));
         }
         catch (\InvalidArgumentException $e){
             return response()->json(["error" => 'Неверно введены параметры!']);
@@ -40,7 +51,7 @@ class PasteController extends Controller
     }
 
     /**
-     * 
+     * @return AnonymousResourceCollection
      */
     public function getLastPastes()
     {
@@ -48,38 +59,52 @@ class PasteController extends Controller
         return PasteResource::collection($pastes);
     }
 
+    /**
+     * @return AnonymousResourceCollection
+     */
     public function getLatestUserPastes(){
 
+        $pastes = $this->pasteService->getLatestUserPastes(Auth::user())->latestPastes;
+        return PasteResource::collection($pastes);
     }
 
     /**
      * @param string $hashId
-     * @return JsonResponse
+     * @return PasteResource
      */
     public function getPaste(string $hashId)
     {
-        return response()->json($this->pasteService->get($hashId));
+        return new PasteResource(PasteDTO::from([
+            'paste' => $this->pasteService->getByIdentifier($hashId),
+            'identifier' => $hashId,
+        ]));
     }
 
     /**
      * @param string $uuid
-     * @return JsonResponse
+     * @return PasteResource
      */
     public function getUnlistedPaste(string $uuid)
     {
-        return response()->json($this->pasteService->getUnlisted($uuid));
+        return new PasteResource(PasteDTO::from([
+            'paste' => $this->pasteService->getByIdentifier($uuid),
+            'identifier' => $uuid,
+        ]));
     }
 
     /**
      * @param string $identifier
-     * @param ComplaintRequest $complaintRequest
-     * @return JsonResponse
+     * @param ComplaintDTO $request
+     * @return ComplaintResource|JsonResponse
      */
-    public function addComplaint(string $identifier, ComplaintRequest $complaintRequest)
+    public function addComplaint(string $identifier, ComplaintDto $request)
     {
-        if($this->complaintService->store($complaintRequest->toDTO(), $identifier))
-            return response()->json(['message' => 'Жалоба успешно добавлена!'], 201);
-        return response()->json(['message' => 'Произошла ошибка!'], 500);
+        try{
+            $complaint = $this->complaintService->store($request, $identifier, Auth::user());
+            return new ComplaintResource($complaint);
+        } catch (\Exception $e) {
+            return \response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
 

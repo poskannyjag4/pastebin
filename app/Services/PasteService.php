@@ -6,7 +6,6 @@ use App\DTOs\CreatedPasteDTO;
 use App\DTOs\LatestPastesDTO;
 use App\DTOs\PasteDTO;
 use App\DTOs\PasteForCreationDTO;
-use App\DTOs\PasteForLatestDTO;
 use App\DTOs\PasteStoreDTO;
 use App\Enums\ExpirationEnum;
 use App\Enums\LanguageEnum;
@@ -52,11 +51,11 @@ class PasteService
     /**
      * Возвращает список из 10 последних паст пользователя
      *
-     * @param int $id
+     * @param User $user
      * @return LatestPastesDTO
      */
-    public function getLatestUserPastes(int $id): LatestPastesDTO{
-        $latestUserPastes = Paste::getLatestUser($id)->get()->mapWithKeys(
+    public function getLatestUserPastes(User $user): LatestPastesDTO{
+        $latestUserPastes = Paste::getLatestUser($user->id)->get()->mapWithKeys(
             function (Paste $paste) {
                 return [$this->hashids->encode($paste->id) => $paste];
             }
@@ -122,7 +121,8 @@ class PasteService
      */
     public function getUnlisted(string $uuid): Paste{
         $paste = Paste::getByToken($uuid)->first();
-        if(is_null($paste->expires_at) || $paste->expires_at < Carbon::now() || is_null($paste)){
+
+        if(is_null($paste->expires_at) || $paste->expires_at > Carbon::now() || is_null($paste)){
             return $paste;
         }
         abort(404);

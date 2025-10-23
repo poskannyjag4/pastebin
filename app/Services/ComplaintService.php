@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTOs\ComplaintDTO;
 use App\Models\Complaint;
 use App\Models\Paste;
+use App\Models\User;
 use App\Repositories\ComplaintRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -25,20 +26,23 @@ class ComplaintService
     /**
      * @param ComplaintDTO $data
      * @param string $identifier
-     * @return bool
+     * @param User|null $user
+     * @return void
+     * @throws \Exception
      */
-    public function store(ComplaintDTO $data, string $identifier): bool{
+    public function store(ComplaintDTO $data, string $identifier, ?User $user): Complaint{
         $paste = $this->pasteService->getByIdentifier($identifier);
         $complaint = Complaint::create([
             'details' => $data->details,
             'paste_id' => $paste->id,
-            'user_id' => Auth::check() ? Auth::user()->id : null,
+            'user_id' => $user->id ?? null,
         ]);
 
         if(is_null($complaint)){
-            return false;
+            throw new \Exception('Произошла ошибка');
         }
-        return true;
+        return $complaint;
+
     }
 
     /**
@@ -49,3 +53,4 @@ class ComplaintService
         return Complaint::with(['user', 'paste'])->paginate(15);
     }
 }
+

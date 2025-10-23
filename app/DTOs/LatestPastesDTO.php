@@ -10,7 +10,7 @@ use App\Models\Paste;
 class LatestPastesDTO extends Dto
 {
     /**
-     * @param array<PasteForLatestDTO> $latestPastes
+     * @param array<PasteDTO> $latestPastes
      */
     public function __construct(
         public readonly array $latestPastes,
@@ -24,7 +24,7 @@ class LatestPastesDTO extends Dto
      * @return LatestPastesDTO
      */
     public static function fromArray(Collection $pastes): self{
-        $latestPastes = $pastes->mapInto(PasteForLatestDTO::class)->toArray();
+        $latestPastes = $pastes->mapInto(PasteDTO::class)->values()->toArray();
         return new self($latestPastes);
     }
 
