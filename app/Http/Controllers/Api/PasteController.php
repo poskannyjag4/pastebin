@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTOs\PasteStoreDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ComplaintRequest;
 use App\Http\Requests\PasteStoreRequest;
+use App\Http\Resources\PasteResource;
 use App\Services\ComplaintService;
 use App\Services\PasteService;
 use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PasteController extends Controller
@@ -22,27 +25,31 @@ class PasteController extends Controller
     }
 
     /**
-     * @param PasteStoreRequest $request
+     * @param PasteStoreDTO $data
      * @return JsonResponse
      */
-    public function store(PasteStoreRequest $request): JsonResponse{
-        $validated = $request->toDTO();
+    public function store(PasteStoreDTO $data){
         try {
-            $identifier = $this->pasteService->store($validated);
+           $identifier = $this->pasteService->store($data, Auth::user());
+           $paste = $this->pasteService->getByIdentifier($identifier);
+           return new PasteResource($paste);
         }
         catch (\InvalidArgumentException $e){
             return response()->json(["error" => 'Неверно введены параметры!']);
         }
-
-        return response()->json($this->pasteService->getByIdentifier($identifier));
     }
 
     /**
-     * @return JsonResponse
+     * 
      */
     public function getLastPastes()
     {
-        return \response()->json($this->pasteService->getDataForLayout());
+        $pastes = $this->pasteService->getLatestPastes()->latestPastes;
+        return PasteResource::collection($pastes);
+    }
+
+    public function getLatestUserPastes(){
+
     }
 
     /**

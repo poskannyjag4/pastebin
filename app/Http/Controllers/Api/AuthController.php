@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\DTOs\ApiLoginDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\LoginResource;
+use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -26,9 +28,11 @@ class AuthController extends Controller
      */
     public function login(ApiLoginDTO $request){
         try{
-            
-            $token = $this->userService->getToken($request);
-            return response()->json(['token' => $token], 201);
+           
+            $user = $this->userService->getUserByLogin($request);
+            $token = $user->createToken('api')->plainTextToken;
+            info($token);
+            return $token;
         }
         catch (\Exception $exception){
             return response()->json(['error' => 'Произошла ошибка!'], 500);

@@ -3,12 +3,15 @@
 namespace App\Services;
 
 use App\DTOs\ApiLoginDTO;
+use App\DTOs\UserDTO;
+use App\Http\Resources\LoginResource;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Throwable;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -45,21 +48,27 @@ class UserService
     }
 
     
-    public function getToken(ApiLoginDTO $data): string{
+    public function generateToken(User $user): void{
 
-        $user = User::whereEmail($data->email);
+        if($user->tokens->where('name', 'access_token')->count() !=0){
+            $user->tokens();
+        }
+        $user->createToken('accesss_token');
+        return;
+    }
 
+    public function getUserByLogin(ApiLoginDTO $data){
+         $user = User::whereEmail($data->email)->first();
+
+         
         if(is_null($user)){
             throw new Exception('Пользователь не найден!');
         }
 
-        if(!\Hash::check($data->password, $user->password)){
+        if($data->password != $user->password){
             throw new Exception('Пользователь не найден!');
         }
-
-        if($user->tokens->contains('access_token')){
-            return $user->tokens['access_token'];
-        }
-        return $user->createToken('accesss_token')->plainTextToken;
+        
+        return $user;
     }
 }

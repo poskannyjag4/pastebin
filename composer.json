@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.10.1",
         "orchid/platform": "*",
         "scrivo/highlight.php": "^9.18",
-        "spatie/laravel-data": "^4.17"
+        "spatie/laravel-data": "^4.17",
+        "wotz/laravel-swagger-ui": "^1.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.6",
