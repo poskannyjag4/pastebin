@@ -105,11 +105,11 @@ class PasteService
         $id = $this->hashids->decode($hashId)[0];
         $paste = Paste::find($id);
         if(!is_null($paste->expires_at) && ($paste->expires_at < Carbon::now())){
-            abort(404);
+            abort(410);
         }
         if($paste->visibility != VisibilityEnum::public->name ){
             if(\Gate::denies('ViewPrivatePaste', $paste)){
-                abort(404);
+                abort(403);
             }
         }
         return $paste;
@@ -125,7 +125,7 @@ class PasteService
         if(is_null($paste->expires_at) || $paste->expires_at > Carbon::now() || is_null($paste)){
             return $paste;
         }
-        abort(404);
+        abort(410);
     }
 
     /**
