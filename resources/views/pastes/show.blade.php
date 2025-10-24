@@ -45,7 +45,7 @@
             if (accessType === 'unlisted') {
                 urlToCopy = `${window.location.origin}/p/s/${identifier}`;
             } else {
-                urlToCopy = `${window.location.origin}/${identifier}`;
+                urlToCopy = `${window.location.origin}/p/${identifier}`;
             }
             console.log(accessType);
             navigator.clipboard.writeText(urlToCopy).then(() => {
