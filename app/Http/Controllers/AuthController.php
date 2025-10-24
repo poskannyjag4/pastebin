@@ -6,6 +6,7 @@ use App\DTOs\LoginDTO;
 use App\DTOs\RegisterDTO;
 use App\Models\User;
 use App\Models\UserSocial;
+use App\Services\UserService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -21,6 +22,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse as SocialiteRedirectRespon
 class AuthController extends Controller
 {
 
+    function __construct(
+        private UserService $userService,
+    )
+    {
+
+    }
     /**
      * @return View
      */
@@ -110,7 +117,7 @@ class AuthController extends Controller
                 }
 
                 $newUserSocial->user()->associate($user);
-                $newUserSocial->save();
+                 $newUserSocial->save();
 
                 Auth::login($user);
                 return redirect('/');
@@ -130,5 +137,11 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('login.show')->with('email', 'Что-то пошло не так при входе через ' . $provider);
         }
+    }
+
+    public function getToken(){
+
+        $token =$this->userService->generateToken(Auth::user());
+        return \view('auth.api-token', ['token' => $token]);
     }
 }

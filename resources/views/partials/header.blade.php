@@ -8,6 +8,7 @@
 
             @auth
                 <li><a href="{{ route('paste.my-pastes') }}">Мои пасты</a></li>
+                <li><a href="{{ route('auth.token') }}">Получить токен </a></li>
                 <li>
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf

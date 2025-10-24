@@ -39,14 +39,16 @@ class UserService
 
     /**
      * @param User $user
-     * @return void
+     * @return string
      */
-    public function generateToken(User $user): void{
+    public function generateToken(User $user): string
+    {
+
 
         if($user->tokens->where('name', 'access_token')->count() !=0){
-            $user->tokens();
+           $user->tokens()->where('name', 'access_token')->delete();
         }
-        $user->createToken('access_token');
+        return $user->createToken('access_token')->plainTextToken;
     }
 
 

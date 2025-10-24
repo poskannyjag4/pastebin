@@ -540,16 +540,37 @@ tbody tr:last-child td {
 }
 
 
-.github-btn {
-    background-color: #315467;
-}
-
-.google-btn {
-    background-color: #DB4437;
-}
 .report-paste-info {
     margin-bottom: 1rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--border-color);
     color: var(--text-color-secondary);
+}
+
+.api-token-container {
+    padding: 25px;
+    background-color: var(--primary-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+/* Нейтральный синий цвет для кнопок-действий */
+.info-btn {
+    background-color: #3b82f6; /* Приятный синий цвет */
+}
+
+/* Добавим эффект при наведении для лучшего UX */
+.info-btn:hover {
+    background-color: #2563eb; /* Слегка темнее при наведении */
 }
