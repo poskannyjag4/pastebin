@@ -13,15 +13,15 @@ use Illuminate\Contracts\Pagination\Paginator;
 /**
  * @extends Builder<Paste>
  */
-class PasteBuilder extends Builder{
+class PasteBuilder extends Builder {
 
 
     /**
      * @return PasteBuilder
      */
 
-    public function whereNotExpired(): self{
-        return $this->where(function ($query){
+    public function whereNotExpired(): self {
+        return $this->where(function ($query) {
             $query->where('expires_at', '>', Carbon::now())
                 ->orWhere('expires_at', '=', null);
         });
@@ -38,7 +38,7 @@ class PasteBuilder extends Builder{
      * @param int $id
      * @return PasteBuilder
      */
-    public function getForUser(int $id): self{
+    public function getForUser(int $id): self {
         return $this->where('user_id', '=', $id);
     }
 
@@ -62,7 +62,7 @@ class PasteBuilder extends Builder{
      * @param string $uuid
      * @return PasteBuilder
      */
-    public function getByToken(string $uuid): self{
+    public function getByToken(string $uuid): self {
         return $this->where('token', $uuid);
     }
 }

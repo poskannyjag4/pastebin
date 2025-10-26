@@ -12,16 +12,14 @@ enum ExpirationEnum:int
     case week = 604800;
     case month = 2419200;
 
-
-
     /**
      * Парсит количество секунд в человекопонятную строку
-     * 
+     *
      * @param ExpirationEnum $expiration
      * @return string
      */
-    public static function toHumanString(self $expiration): string{
-        return match ($expiration){
+    public static function toHumanString(self $expiration): string {
+        return match ($expiration) {
             self::never => 'Никогда',
             self::minutes => '10 минут',
             self::hour => '1 час',

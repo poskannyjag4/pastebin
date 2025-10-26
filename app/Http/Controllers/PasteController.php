@@ -26,15 +26,17 @@ class PasteController extends Controller
     /**
      * Показывает форму добавления пасты
      *
-     * @return Factory|View|\Illuminate\View\View
+     * @return View
      */
-    public function index(): Factory|View|\Illuminate\View\View{
+    public function index(): View {
 
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
+
         if(Auth::check()){
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
+
         return view('pastes.index', compact('latestPastes', 'latestUserPastes'));
     }
 
@@ -44,7 +46,7 @@ class PasteController extends Controller
      * @param PasteStoreDTO $request
      * @return RedirectResponse
      */
-    public function store(PasteStoreDTO $request): RedirectResponse{
+    public function store(PasteStoreDTO $request): RedirectResponse {
         try {
             $identifier = $this->pasteService->store($request, Auth::user());
         }
@@ -55,6 +57,7 @@ class PasteController extends Controller
         if(Str::isUuid($identifier)){
             return redirect()->route('paste.share', ['uuid' => $identifier]);
         }
+
         return redirect()->route('paste.show', ['hashId' => $identifier]);
     }
 
@@ -64,13 +67,11 @@ class PasteController extends Controller
      * @param string $hashId
      * @return View
      */
-    public function show(string $hashId): View
-    {
-
+    public function show(string $hashId): View {
         $paste = $this->pasteService->get($hashId);
-
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
+
         if(Auth::check()){
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
@@ -79,6 +80,7 @@ class PasteController extends Controller
         $pastes['latestUserPastes'] = $latestUserPastes;
         $pastes['paste'] = $paste;
         $pastes['identifier'] = $hashId;
+
         return view('pastes.show', $pastes);
     }
 
@@ -89,12 +91,11 @@ class PasteController extends Controller
      * @return View
      */
 
-    public function share(string $uuid): View{
-
+    public function share(string $uuid): View {
         $paste = $this->pasteService->getUnlisted($uuid);
-
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
+
         if(Auth::check()){
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
@@ -112,17 +113,18 @@ class PasteController extends Controller
      *
      * @return View
      */
-    public function showUserPastes(): View
-    {
-
+    public function showUserPastes(): View {
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
+
         if(Auth::check()){
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
+
         $pastes['latestPastes'] = $latestPastes;
         $pastes['latestUserPastes'] = $latestUserPastes;
         $userPastes = $this->pasteService->getUserPastes(Auth::id());
+
         return view('pastes.user-pastes', [...$userPastes, ...$pastes]);
     }
 }

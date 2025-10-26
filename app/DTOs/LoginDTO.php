@@ -15,16 +15,13 @@ class LoginDTO extends Dto
     function __construct(
         public readonly string $email,
         public readonly string $password,
-    )
-    {
+    ){}
 
-    }
-
-    public static function withValidator(Validator $validator): void
-    {
+    public static function withValidator(Validator $validator): void {
         $validator->after(function ($validator) {
             $email =$validator->getData()['email'];
             $password = $validator->getData()['password'];
+
             if(RateLimiter::tooManyAttempts($email, 5)){
                 $seconds = RateLimiter::availableIn($email);
                 $validator->errors()->add('email', 'Слишком много попыток! Попробуйте через '.ceil($seconds/60).' минут!');

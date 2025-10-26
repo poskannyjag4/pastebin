@@ -8,7 +8,7 @@ enum VisibilityEnum: string
     case unlisted = 'Доступ только по ссылке';
     case private = 'Доступно только мне';
 
-    public static function fromName(string $name): string{
+    public static function fromName(string $name): string {
         return match ($name) {
             self::public->name => self::public->value,
             self::private->name => self::private->value,

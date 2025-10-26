@@ -16,7 +16,7 @@
 <body>
 <div class="container">
     <h1>403</h1>
-    <p>Доступ к этой странице запрещен.</p>
+    <p>{{ $exception->getMessage() }}</p>
     <a href="{{ route('paste.home') }}">Вернуться на главную</a>
 </div>
 </body>

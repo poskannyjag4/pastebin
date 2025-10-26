@@ -26,18 +26,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class UserSocial extends Model
 {
-    /**
-     * @var list<string>
-     */
     protected $fillable = ['provider_name', 'provider_id', 'user_id'];
-
     protected $table = 'user_socials';
 
     /**
      * @return BelongsTo<User, $this>
      */
-    public function user(): BelongsTo
-    {
+    public function user(): BelongsTo {
         return $this->belongsTo(User::class, 'user_id');
     }
 }

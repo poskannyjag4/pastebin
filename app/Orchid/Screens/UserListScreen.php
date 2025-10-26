@@ -5,6 +5,7 @@ namespace App\Orchid\Screens;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
@@ -21,17 +22,14 @@ class UserListScreen extends Screen
      */
     public function __construct(
         private readonly UserService $userService
-    )
-    {
-    }
+    ){}
 
     /**
      * Fetch data to be displayed on the screen.
      *
      * @return array<string, mixed>
      */
-    public function query(): iterable
-    {
+    public function query(): iterable {
         return [
             'users' => $this->userService->getUsers(),
         ];
@@ -42,18 +40,16 @@ class UserListScreen extends Screen
      *
      * @return string|null
      */
-    public function name(): ?string
-    {
+    public function name(): ?string {
         return 'Список пользователей';
     }
 
     /**
      * The screen's action buttons.
      *
-     * @return \Orchid\Screen\Action[]
+     * @return Action[]
      */
-    public function commandBar(): iterable
-    {
+    public function commandBar(): iterable {
         return [];
     }
 
@@ -62,8 +58,7 @@ class UserListScreen extends Screen
      *
      * @return \Orchid\Screen\Layout[]|string[]
      */
-    public function layout(): iterable
-    {
+    public function layout(): iterable {
         return [
             Layout::table('users', [
                 TD::make('id', 'ID'),
@@ -72,7 +67,6 @@ class UserListScreen extends Screen
                 TD::make('is_banned', 'Бан'),
                 TD::make()->render(fn (User $user) =>
                         Button::make('Забанить пользователя')
-        //                    ->icon('bubble')
                             ->method('banUser')
                             ->parameters(['userId' => $user->id]))
             ])
@@ -84,7 +78,7 @@ class UserListScreen extends Screen
      * @return void
      * @throws \Throwable
      */
-    public function banUser(int $userId): void{
+    public function banUser(int $userId): void {
         try{
             $this->userService->ban($userId);
             Toast::success('Пользователь забанен!');

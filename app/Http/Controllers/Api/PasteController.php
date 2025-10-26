@@ -26,15 +26,14 @@ class PasteController extends Controller
     public function __construct(
         private readonly PasteService $pasteService,
         private readonly ComplaintService $complaintService,
-    )
-    {
-    }
+    ){}
 
     /**
      * @param PasteStoreDTO $data
-     * @return PasteResource|JsonResponse
+     * @return JsonResponse|PasteResource
      */
-    public function store(PasteStoreDTO $data){
+    public function store(PasteStoreDTO $data): JsonResponse|PasteResource
+    {
         try {
            $identifier = $this->pasteService->store($data, Auth::user());
 
@@ -53,18 +52,18 @@ class PasteController extends Controller
     /**
      * @return AnonymousResourceCollection
      */
-    public function getLastPastes()
-    {
+    public function getLastPastes(): AnonymousResourceCollection {
         $pastes = $this->pasteService->getLatestPastes()->latestPastes;
+
         return PasteResource::collection($pastes);
     }
 
     /**
      * @return AnonymousResourceCollection
      */
-    public function getLatestUserPastes(){
-
+    public function getLatestUserPastes(): AnonymousResourceCollection {
         $pastes = $this->pasteService->getLatestUserPastes(Auth::user())->latestPastes;
+
         return PasteResource::collection($pastes);
     }
 
@@ -72,8 +71,7 @@ class PasteController extends Controller
      * @param string $hashId
      * @return PasteResource
      */
-    public function getPaste(string $hashId)
-    {
+    public function getPaste(string $hashId): PasteResource {
         return new PasteResource(PasteDTO::from([
             'paste' => $this->pasteService->getByIdentifier($hashId),
             'identifier' => $hashId,
@@ -84,8 +82,7 @@ class PasteController extends Controller
      * @param string $uuid
      * @return PasteResource
      */
-    public function getUnlistedPaste(string $uuid)
-    {
+    public function getUnlistedPaste(string $uuid): PasteResource {
         return new PasteResource(PasteDTO::from([
             'paste' => $this->pasteService->getByIdentifier($uuid),
             'identifier' => $uuid,
@@ -97,15 +94,13 @@ class PasteController extends Controller
      * @param ComplaintDTO $request
      * @return ComplaintResource|JsonResponse
      */
-    public function addComplaint(string $identifier, ComplaintDto $request)
-    {
+    public function addComplaint(string $identifier, ComplaintDto $request): ComplaintResource|JsonResponse {
         try{
             $complaint = $this->complaintService->store($request, $identifier, Auth::user());
+
             return new ComplaintResource($complaint);
         } catch (\Exception $e) {
             return \response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-
 }

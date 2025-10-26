@@ -9,11 +9,7 @@ class ComplaintDTO extends Dto
     /**
      * @param string $details
      */
-    public function __construct(
+    public function __construct (
         public readonly string $details,
-    )
-    {
-    }
-
-
+    ){}
 }

@@ -16,7 +16,7 @@
 <body>
 <div class="container">
     <h1>410</h1>
-    <p>Страница, которую вы ищете, была удалена навсегда.</p>
+    <p>{{ $exception->getMessage() }}</p>
     <a href="{{ route('paste.home') }}">Вернуться на главную</a>
 </div>
 </body>

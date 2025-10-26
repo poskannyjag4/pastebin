@@ -31,21 +31,21 @@ class Complaint extends Model
     use AsSource;
 
     protected $table = 'complaints';
+    protected $fillable = ['user_id', 'details', 'paste_id'];
+
     /**
      * @return BelongsTo<User, $this>
      */
-    public function user(): BelongsTo
-    {
+    public function user(): BelongsTo {
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
     /**
      * @return BelongsTo<Paste, $this>
      */
-    public function paste(): BelongsTo
-    {
+    public function paste(): BelongsTo {
         return $this->belongsTo('App\Models\Paste', 'paste_id');
     }
 
-    protected $fillable = ['user_id', 'details', 'paste_id'];
+
 }

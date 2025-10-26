@@ -16,7 +16,5 @@ class PasteStoreDTO extends Dto
         public readonly string $programming_language,
         public readonly int $expires_at,
         public readonly string $visibility,
-    )
-    {
-    }
+    ){}
 }

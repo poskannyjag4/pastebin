@@ -134,24 +134,21 @@ class User extends Authenticatable
     /**
      * @return HasMany<Paste, $this>
      */
-    public function pastes(): HasMany
-    {
+    public function pastes(): HasMany {
         return $this->hasMany(Paste::class, 'user_id');
     }
 
     /**
      * @return HasMany<Complaint, $this>
      */
-    function complaints(): HasMany
-    {
+    function complaints(): HasMany {
         return $this->hasMany(Complaint::class, 'user_id');
     }
 
      /**
      * @return HasMany<UserSocial, $this>
      */
-    function userSocails(): HasMany
-    {
+    function userSocails(): HasMany {
         return $this->hasMany(UserSocial::class, 'user_id');
     }
 }

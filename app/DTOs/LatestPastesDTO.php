@@ -12,20 +12,17 @@ class LatestPastesDTO extends Dto
     /**
      * @param array<PasteDTO> $latestPastes
      */
-    public function __construct(
+    public function __construct (
         public readonly array $latestPastes,
-
-    )
-    {
-    }
+    ){}
 
     /**
      * @param Collection<string, Paste> $pastes
      * @return LatestPastesDTO
      */
-    public static function fromArray(Collection $pastes): self{
+    public static function fromArray(Collection $pastes): self {
         $latestPastes = $pastes->mapInto(PasteDTO::class)->values()->toArray();
+
         return new self($latestPastes);
     }
-
 }

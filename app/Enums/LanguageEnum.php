@@ -13,6 +13,4 @@ enum LanguageEnum: string
     case sql = 'SQL';
     case java = 'Java';
     case csharp = 'C#';
-
-
 }

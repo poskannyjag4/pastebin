@@ -24,7 +24,7 @@ use Ramsey\Uuid\UuidInterface;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read \App\Models\User|null $user
- * @method static \Database\Factories\PasteFactory factory($count = null, $state = [])
+ * @method static PasteFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste query()
@@ -53,24 +53,8 @@ use Ramsey\Uuid\UuidInterface;
 class Paste extends Model
 {
 
-    /** @use HasFactory<\Database\Factories\PasteFactory> */
+    /** @use HasFactory<PasteFactory> */
     use HasFactory, AsSource;
-
-    /**
-     * @return BelongsTo<User, $this>
-     */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    /**
-     * @return HasMany<Complaint, $this>
-     */
-    public function complaints(): HasMany{
-        return $this->hasMany(Complaint::class, 'paste_id');
-    }
-
 
     /**
      * @var string
@@ -81,8 +65,25 @@ class Paste extends Model
      */
     protected $fillable = ['user_id', 'title', 'text', 'expires_at', 'visibility', 'programming_language', 'token'];
 
-    public function newEloquentBuilder($query): PasteBuilder
-    {
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * @return HasMany<Complaint, $this>
+     */
+    public function complaints(): HasMany {
+        return $this->hasMany(Complaint::class, 'paste_id');
+    }
+
+    /**
+     * @param $query
+     * @return PasteBuilder
+     */
+    public function newEloquentBuilder($query): PasteBuilder {
         return new PasteBuilder($query);
     }
 

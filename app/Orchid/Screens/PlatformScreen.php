@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Screens;
 
+use Orchid\Screen\Action;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 
@@ -14,34 +15,30 @@ class PlatformScreen extends Screen
      *
      * @return array<string, mixed>
      */
-    public function query(): iterable
-    {
+    public function query(): iterable {
         return [];
     }
 
     /**
      * The name of the screen displayed in the header.
      */
-    public function name(): ?string
-    {
+    public function name(): ?string {
         return 'Get Started';
     }
 
     /**
      * Display header description.
      */
-    public function description(): ?string
-    {
+    public function description(): ?string {
         return 'Welcome to your Orchid application.';
     }
 
     /**
      * The screen's action buttons.
      *
-     * @return \Orchid\Screen\Action[]
+     * @return Action[]
      */
-    public function commandBar(): iterable
-    {
+    public function commandBar(): iterable {
         return [];
     }
 
@@ -50,8 +47,7 @@ class PlatformScreen extends Screen
      *
      * @return \Orchid\Screen\Layout[]
      */
-    public function layout(): iterable
-    {
+    public function layout(): iterable {
         return [
             Layout::view('platform::partials.update-assets'),
             Layout::view('platform::partials.welcome'),

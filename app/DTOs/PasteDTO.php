@@ -10,8 +10,5 @@ class PasteDTO extends DTO
     public function __construct(
         public Paste  $paste,
         public string $identifier,
-
-    )
-    {
-    }
+    ){}
 }

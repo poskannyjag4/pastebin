@@ -4,6 +4,7 @@ namespace App\Orchid\Screens;
 
 use App\Models\Paste;
 use App\Services\PasteService;
+use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Screen;
 use Orchid\Screen\TD;
@@ -17,17 +18,14 @@ class PasteListScreen extends Screen
      */
     public function __construct(
         private readonly PasteService $pasteService
-    )
-    {
-    }
+    ){}
 
     /**
      * Fetch data to be displayed on the screen.
      *
      * @return array<string, mixed>
      */
-    public function query(): iterable
-    {
+    public function query(): iterable {
         return [
             'pastes' => $this->pasteService->getAllPastes()
         ];
@@ -38,18 +36,16 @@ class PasteListScreen extends Screen
      *
      * @return string|null
      */
-    public function name(): ?string
-    {
+    public function name(): ?string {
         return 'PasteListScreen';
     }
 
     /**
      * The screen's action buttons.
      *
-     * @return \Orchid\Screen\Action[]
+     * @return Action[]
      */
-    public function commandBar(): iterable
-    {
+    public function commandBar(): iterable {
         return [];
     }
 
@@ -58,8 +54,7 @@ class PasteListScreen extends Screen
      *
      * @return \Orchid\Screen\Layout[]|string[]
      */
-    public function layout(): iterable
-    {
+    public function layout(): iterable {
         return [
             Layout::table('pastes', [
                 TD::make('id', 'ID'),
@@ -81,23 +76,18 @@ class PasteListScreen extends Screen
      * @param int $id
      * @return void
      */
-    public function DeletePaste(int $id): void
-    {
+    public function DeletePaste(int $id): void {
         try{
             if($this->pasteService->delete($id) == 0){
                 Toast::warning('Паста не была удалена, попробуйте снова!');
             }
             else{
                 Toast::success('Паста удалена!');
-
             }
         }
         catch(\Exception $ex)
         {
             Toast::error('Произошла ошибка!');
         }
-
     }
-
-
 }
