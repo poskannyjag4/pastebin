@@ -6,9 +6,7 @@ use App\Orchid\Screens\ComplaintListScreen;
 use App\Orchid\Screens\PasteListScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\UserListScreen;
-use App\Orchid\Screens\User\UserProfileScreen;
 use Illuminate\Support\Facades\Route;
-use Tabuna\Breadcrumbs\Trail;
 
 /*
 |--------------------------------------------------------------------------

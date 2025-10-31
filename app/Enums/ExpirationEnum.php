@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ExpirationEnum:int
+enum ExpirationEnum: int
 {
     case never = 0;
     case minutes = 600;
@@ -14,11 +14,9 @@ enum ExpirationEnum:int
 
     /**
      * Парсит количество секунд в человекопонятную строку
-     *
-     * @param ExpirationEnum $expiration
-     * @return string
      */
-    public static function toHumanString(self $expiration): string {
+    public static function toHumanString(self $expiration): string
+    {
         return match ($expiration) {
             self::never => 'Никогда',
             self::minutes => '10 минут',

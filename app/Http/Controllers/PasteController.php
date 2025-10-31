@@ -2,38 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\DTOs\PasteDTO;
 use App\DTOs\PasteStoreDTO;
-use App\Http\Requests\PasteStoreRequest;
 use App\Services\PasteService;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PasteController extends Controller
 {
-    /**
-     * @param PasteService $pasteService
-     */
     public function __construct(
         private readonly PasteService $pasteService
-    ){}
-
+    ) {}
 
     /**
      * Показывает форму добавления пасты
-     *
-     * @return View
      */
-    public function index(): View {
-
+    public function index(): View
+    {
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
 
-        if(Auth::check()){
+        if (Auth::check()) {
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
 
@@ -42,19 +32,16 @@ class PasteController extends Controller
 
     /**
      * Сохраняет пасту в бд
-     *
-     * @param PasteStoreDTO $request
-     * @return RedirectResponse
      */
-    public function store(PasteStoreDTO $request): RedirectResponse {
+    public function store(PasteStoreDTO $request): RedirectResponse
+    {
         try {
             $identifier = $this->pasteService->store($request, Auth::user());
-        }
-        catch (\InvalidArgumentException $e){
+        } catch (\InvalidArgumentException $e) {
             return redirect()->back()->withInput()->withErrors(['expires_at' => 'Выбрано недопустимое время истечения. Пожалуйста, выберите значение из списка.']);
         }
 
-        if(Str::isUuid($identifier)){
+        if (Str::isUuid($identifier)) {
             return redirect()->route('paste.share', ['uuid' => $identifier]);
         }
 
@@ -63,16 +50,14 @@ class PasteController extends Controller
 
     /**
      * Показывает пасту
-     *
-     * @param string $hashId
-     * @return View
      */
-    public function show(string $hashId): View {
+    public function show(string $hashId): View
+    {
         $paste = $this->pasteService->get($hashId);
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
 
-        if(Auth::check()){
+        if (Auth::check()) {
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
 
@@ -86,17 +71,14 @@ class PasteController extends Controller
 
     /**
      * Показывает пасту по секретной ссылке
-     *
-     * @param string $uuid
-     * @return View
      */
-
-    public function share(string $uuid): View {
+    public function share(string $uuid): View
+    {
         $paste = $this->pasteService->getUnlisted($uuid);
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
 
-        if(Auth::check()){
+        if (Auth::check()) {
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
 
@@ -110,14 +92,13 @@ class PasteController extends Controller
 
     /**
      * Показывает список паст пользователя с пагинацией
-     *
-     * @return View
      */
-    public function showUserPastes(): View {
+    public function showUserPastes(): View
+    {
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
 
-        if(Auth::check()){
+        if (Auth::check()) {
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
 
