@@ -13,6 +13,8 @@ class RoleFilter extends Filter
 {
     /**
      * The displayable name of the filter.
+     *
+     * @return string
      */
     public function name(): string
     {
@@ -21,6 +23,8 @@ class RoleFilter extends Filter
 
     /**
      * The array of matched parameters.
+     *
+     * @return array
      */
     public function parameters(): array
     {
@@ -29,6 +33,10 @@ class RoleFilter extends Filter
 
     /**
      * Apply to a given Eloquent query builder.
+     *
+     * @param Builder $builder
+     *
+     * @return Builder
      */
     public function run(Builder $builder): Builder
     {

@@ -1,0 +1,398 @@
+openapi: 3.1.0
+info:
+  title: Pastebin API
+  description: Pastebin API
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:92'
+paths:
+  /pastes:
+    post:
+      security:
+        - bearerAuth: []
+      description: "Метод для создания новой пасты"
+      tags:
+        - pastes
+      requestBody:
+        description: "Данные для добавления пасты"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/pasteRequest'
+      responses:
+        200:
+          description: "Успешный ответ"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pasteResponse'
+        422:
+          description: "ошибка валидации"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validationError'
+  /pastes/latest-public:
+    get:
+      security:
+        - bearerAuth: []
+      description: "Метод для получения списка последних 10 публичных паст"
+      tags:
+        - pastes
+      responses:
+        200:
+          description: "Успешный ответ"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/latestPasteListResponse'
+  /pastes/latest-user:
+    get:
+      security:
+        - bearerAuth: []
+      description: "Метод для получения списка последних 10 паст пользвателя"
+      tags:
+        - pastes
+      responses:
+        200:
+          description: "Успешный ответ"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/latestPasteListResponse'
+  /pastes/{hashId}:
+    get:
+      security:
+        - bearerAuth: []
+      description: "Метод для получения пасты"
+      tags:
+        - pastes
+      parameters:
+        - name: hashId
+          in: path
+          required: true
+          description: "Короткий идентификатор пасты"
+          schema:
+            type: string
+            example: gf7S9gB
+      responses:
+        200:
+          description: "Успешный ответ"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pasteResponse'
+  /pastes/s/{uuid}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      description: "Метод для получения пасты"
+      tags:
+        - pastes
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: "UUID для unlisted паст"
+          schema:
+            type: string
+            format: uuid
+            example: 87b46d1a-429b-4e1b-9a8c-0f9c2e0b5d4e
+      responses:
+        200:
+          description: "Успешный ответ"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pasteResponse'
+  /pastes/{hashId}/complaint:
+    post:
+      security:
+        - bearerAuth: []
+      description: "Метод для создания жалобы для пасты"
+      tags:
+        - pastes
+      parameters:
+        - name: hashId
+          in: path
+          required: true
+          description: "Короткий идентификатор пасты"
+          schema:
+            type: string
+            example: gf7S9gB
+      requestBody:
+        description: "Данные для добавления жалобы"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/complaintRequest'
+      responses:
+        200:
+          description: "Успешный ответ"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/complaintResponse'
+  /pastes/s/{uuid}/complaint:
+    post:
+      security:
+        - bearerAuth: [ ]
+      description: "Метод для создания жалобы для пасты"
+      tags:
+        - pastes
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: "UUID для unlisted паст"
+          schema:
+            type: string
+            format: uuid
+            example: 87b46d1a-429b-4e1b-9a8c-0f9c2e0b5d4e
+      requestBody:
+        description: "Данные для добавления жалобы"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/complaintRequest'
+      responses:
+        200:
+          description: "Успешный ответ"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/complaintResponse'
+
+  /user:
+    get:
+      tags:
+        - users
+      security:
+        - bearerAuth: []
+      description: "Метод для получение информации о пользователе"
+      responses:
+        200:
+          description: "Успешный ответ"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    pasteRequest:
+      type: object
+      description: "Схема для добавления пасты"
+      properties:
+        text:
+          type: string
+          description: "Текст пасты"
+          example: "text1"
+        title:
+          type: string
+          description: "Заголовок пасты"
+          example: "title1"
+        programming_language:
+          type: string
+          enum: [plaintext, python, php, xml, js, css, sql, java, csharp]
+          description: "Синтаксис пасты"
+          example: "python"
+        expires_at:
+          type: int
+          description: "Количество секунд, через которое паста станет недоступна"
+          example: 12345
+        visibility:
+          type: string
+          enum: [public, unlisted, private]
+          description: "Уровень доступа"
+          example: "public"
+      required:
+        - text
+        - title
+        - programming_language
+        - expires_at
+        - visibility
+    paste:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID пасты
+          example: 1
+        title:
+          type: string
+          description: Заголовок пасты
+          example: "title1"
+        text:
+          type: string
+          description: Текст пасты
+          example: "text1"
+        expires_at:
+          type: string
+          format: date-time
+          description: Дата и время когда паста истечет
+          example: "2025-11-04 11:43:00"
+          nullable: true
+        visibility:
+          type: string
+          description: Уровень доступа
+          example: "public"
+          enum: [public, private, unlisted]
+        programming_language:
+          type: string
+          description: Язык программирования
+          example: "plaintext"
+          enum: [plaintext, python, php, xml, js, css, sql, java, csharp]
+        user_id:
+          type: integer
+          description: ID пользователя, создавшего пасту
+          example: 3
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          description: Дата создания
+          example: "2025-11-04T08:09:03.000000Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Дата последнего обновления
+          example: "2025-11-04T08:09:03.000000Z"
+        token:
+          type: string
+          description: Токен для доступа по ссылке, если уровень доступа - unlisted
+          nullable: true
+          example: null
+      required:
+        - id
+        - text
+        - visibility
+        - created_at
+        - updated_at
+    pasteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            paste:
+              $ref: '#/components/schemas/paste'
+            identifier:
+              type: string
+              description: Идентификатор для URL.
+              example: "qzxkXG8ZWa"
+          required:
+            - paste
+            - identifier
+      required:
+        - data
+    validationError:
+      type: object
+      description: Ошибка валидации
+      properties:
+        message:
+          type: string
+          description: Сообщение об ошибке
+          example: "The programming language field must be a string."
+        errors:
+          type: object
+          description: Ошибки для конкретных полей
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              description: Сообщение об ошибке для конкретного поля
+              example: "The programming language field must be a string."
+          example:
+            programming_language:
+              - "The programming language field must be a string."
+            title:
+              - "The title field is required."
+      required:
+        - message
+        - errors
+    latestPasteListResponse:
+      type: object
+      description: Схема для ответа, возвращающего массив паст.
+      properties:
+        data:
+          type: array
+          description: Массив объектов паст с их идентификаторами.
+          items:
+            $ref: '#/components/schemas/pasteResponse'
+          example:
+            - paste:
+                id: 1
+                title: "title1"
+                text: "text1"
+                expires_at: "2025-11-04 11:43:00"
+                visibility: "public"
+                programming_language: "plaintext"
+                user_id: 3
+                created_at: "2025-11-04T08:09:03.000000Z"
+                updated_at: "2025-11-04T08:09:03.000000Z"
+                token: null
+              identifier: "qzxkXG8ZWa"
+            - paste:
+                id: 2
+                title: "title2"
+                text: "text2"
+                expires_at: null
+                visibility: "private"
+                programming_language: "python"
+                user_id: 3
+                created_at: "2025-11-04T10:00:00.000000Z"
+                updated_at: "2025-11-04T10:00:00.000000Z"
+                token: null
+              identifier: "hjG6saG83"
+      required:
+        - data
+    complaintRequest:
+      type: object
+      description: "Схема для создания жалобы"
+      properties:
+        details:
+          type: string
+          description: "Описание жалобы"
+          example: "Паста нарушает этические нормы"
+    complaintResponse:
+      type: object
+      description: "Схема созданной жалобы"
+      properties:
+        details:
+          type: string
+          description: "Текст жалобы"
+          example: "blablabla"
+        user:
+          $ref: '#/components/schemas/userResponse'
+      required:
+        - details
+        - user
+    userResponse:
+      type: object
+      description: "Схема пользователя"
+      properties:
+        id:
+          type: integer
+          description: "Идентификатор пользователя"
+          example: 3
+        name:
+          type: string
+          description: "Никнейм пользователя"
+          example: "nickname1"
+        email:
+          type: string
+          format: email
+          description: "Почта пользователя"
+          example: "test@test.com"
+      required:
+        - id
+        - name
+        - email

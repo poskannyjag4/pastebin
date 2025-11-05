@@ -71,9 +71,6 @@
         ],
         "analyze": [
             "./vendor/bin/phpstan --memory-limit=512M"
-        ],
-        "style": [
-            "./vendor/bin/pint --preset laravel"
         ]
     },
     "extra": {

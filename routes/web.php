@@ -1,9 +1,14 @@
 <?php
 
-use App\Http\Controllers\PasteController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\PasteController;
+
+
 Route::get('/', [PasteController::class, 'index']);
+
+
 
 require __DIR__.'/auth.php';
 Route::prefix('p')->controller(PasteController::class)->name('paste.')->group(function () {

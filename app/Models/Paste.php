@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Builders\PasteBuilder;
-use Database\Factories\PasteFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Database\Factories\PasteFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,7 +24,6 @@ use Ramsey\Uuid\UuidInterface;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read \App\Models\User|null $user
- *
  * @method static PasteFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste newQuery()
@@ -39,10 +38,8 @@ use Ramsey\Uuid\UuidInterface;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereUsersId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereVisibility($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereUserId($value)
- *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Complaint> $complaints
  * @property-read int|null $complaints_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Paste whereToken($value)
  * @method static PasteBuilder getLatest()
  * @method static PasteBuilder getLatestPublic()
@@ -51,19 +48,18 @@ use Ramsey\Uuid\UuidInterface;
  * @method static PasteBuilder getByToken(string $uuid)
  * @method static PasteBuilder getForUser(int $id)
  * @method static PasteBuilder getPaginated(int $id)
- *
  * @mixin \Eloquent
  */
 class Paste extends Model
 {
+
     /** @use HasFactory<PasteFactory> */
-    use AsSource, HasFactory;
+    use HasFactory, AsSource;
 
     /**
      * @var string
      */
     protected $table = 'pastes';
-
     /**
      * @var list<string>
      */
@@ -72,21 +68,23 @@ class Paste extends Model
     /**
      * @return BelongsTo<User, $this>
      */
-    public function user(): BelongsTo
-    {
+    public function user(): BelongsTo {
         return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
      * @return HasMany<Complaint, $this>
      */
-    public function complaints(): HasMany
-    {
+    public function complaints(): HasMany {
         return $this->hasMany(Complaint::class, 'paste_id');
     }
 
-    public function newEloquentBuilder($query): PasteBuilder
-    {
+    /**
+     * @param $query
+     * @return PasteBuilder
+     */
+    public function newEloquentBuilder($query): PasteBuilder {
         return new PasteBuilder($query);
     }
+
 }

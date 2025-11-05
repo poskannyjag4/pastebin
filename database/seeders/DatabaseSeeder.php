@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Paste;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Factories\PasteFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

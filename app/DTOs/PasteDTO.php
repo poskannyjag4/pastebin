@@ -8,7 +8,7 @@ use Spatie\LaravelData\Dto;
 class PasteDTO extends DTO
 {
     public function __construct(
-        public Paste $paste,
+        public Paste  $paste,
         public string $identifier,
-    ) {}
+    ){}
 }

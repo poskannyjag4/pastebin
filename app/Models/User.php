@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Hashids\Hashids as HashidsAlias;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
@@ -24,8 +26,7 @@ use Orchid\Platform\Models\User as Authenticatable;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Paste> $pastes
  * @property-read int|null $pastes_count
- * @property bool|null $is_banned
- *
+ * @property boolean|null $is_banned
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
@@ -38,21 +39,17 @@ use Orchid\Platform\Models\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
- *
  * @property string|null $provider_name
  * @property string|null $provider_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Complaint> $complaints
  * @property-read int|null $complaints_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereProviderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereProviderName($value)
- *
  * @property array<array-key, mixed>|null $permissions
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Orchid\Platform\Models\Role> $roles
  * @property-read int|null $roles_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User averageByDays(string $value, $startDate = null, $stopDate = null, ?string $dateColumn = null)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User byAccess(string $permitWithoutWildcard)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User byAnyAccess($permitsWithoutWildcard)
@@ -68,17 +65,14 @@ use Orchid\Platform\Models\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User valuesByDays(string $value, $startDate = null, $stopDate = null, string $dateColumn = 'created_at')
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsBanned($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePermissions($value)
- *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UserSocial> $userSocails
  * @property-read int|null $user_socails_count
- *
  * @mixin \Eloquent
  */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
-
+    use HasFactory, Notifiable, HasApiTokens;
     /**
      * The attributes that are mass assignable.
      *
@@ -109,19 +103,19 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'permissions' => 'array',
-        'email_verified_at' => 'datetime',
+        'permissions'          => 'array',
+        'email_verified_at'    => 'datetime',
     ];
 
     /**
      * @var string[]
      */
     protected $allowedFilters = [
-        'id' => Where::class,
-        'name' => Like::class,
-        'email' => Like::class,
-        'updated_at' => WhereDateStartEnd::class,
-        'created_at' => WhereDateStartEnd::class,
+           'id'         => Where::class,
+           'name'       => Like::class,
+           'email'      => Like::class,
+           'updated_at' => WhereDateStartEnd::class,
+           'created_at' => WhereDateStartEnd::class,
     ];
 
     /**
@@ -140,24 +134,23 @@ class User extends Authenticatable
     /**
      * @return HasMany<Paste, $this>
      */
-    public function pastes(): HasMany
-    {
+    public function pastes(): HasMany {
         return $this->hasMany(Paste::class, 'user_id');
     }
 
     /**
      * @return HasMany<Complaint, $this>
      */
-    public function complaints(): HasMany
-    {
+    function complaints(): HasMany {
         return $this->hasMany(Complaint::class, 'user_id');
     }
 
-    /**
+     /**
      * @return HasMany<UserSocial, $this>
      */
-    public function userSocails(): HasMany
-    {
+    function userSocails(): HasMany {
         return $this->hasMany(UserSocial::class, 'user_id');
     }
 }
+
+

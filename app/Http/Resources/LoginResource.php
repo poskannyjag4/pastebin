@@ -16,11 +16,10 @@ class LoginResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
-    {
+    public function toArray(Request $request): array {
         return [
             'email' => $this->email,
-            'password' => $this->password,
+            'password' => $this->password
         ];
     }
 }

@@ -30,7 +30,7 @@ class RoleEditScreen extends Screen
     public function query(Role $role): iterable
     {
         return [
-            'role' => $role,
+            'role'       => $role,
             'permission' => $role->statusOfPermissions(),
         ];
     }
@@ -130,9 +130,9 @@ class RoleEditScreen extends Screen
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
-     *
      * @throws \Exception
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function remove(Role $role)
     {

@@ -6,7 +6,10 @@ use Spatie\LaravelData\Dto;
 
 class ComplaintDTO extends Dto
 {
-    public function __construct(
+    /**
+     * @param string $details
+     */
+    public function __construct (
         public readonly string $details,
-    ) {}
+    ){}
 }
