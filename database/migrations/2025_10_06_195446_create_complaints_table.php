@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->text('details');
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreignId('user_id')->constrained('users');
             $table->unsignedBigInteger('paste_id');
-            $table->foreign('paste_id')->references('id')->on('pastes');
+            $table->foreignId('paste_id')->constrained('pastes');
             $table->timestamps();
         });
     }

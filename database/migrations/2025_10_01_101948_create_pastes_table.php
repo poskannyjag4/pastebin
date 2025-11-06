@@ -19,9 +19,10 @@ return new class extends Migration
             $table->string('visibility');
             $table->string('programming_language');
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->uuid('token')->unique()->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreignId('user_id')->constrained('users')->onDelete('set null');
         });
     }
 
