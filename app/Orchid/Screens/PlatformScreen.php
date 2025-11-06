@@ -15,21 +15,24 @@ class PlatformScreen extends Screen
      *
      * @return array<string, mixed>
      */
-    public function query(): iterable {
+    public function query(): iterable
+    {
         return [];
     }
 
     /**
      * The name of the screen displayed in the header.
      */
-    public function name(): ?string {
+    public function name(): ?string
+    {
         return 'Get Started';
     }
 
     /**
      * Display header description.
      */
-    public function description(): ?string {
+    public function description(): ?string
+    {
         return 'Welcome to your Orchid application.';
     }
 
@@ -38,7 +41,8 @@ class PlatformScreen extends Screen
      *
      * @return Action[]
      */
-    public function commandBar(): iterable {
+    public function commandBar(): iterable
+    {
         return [];
     }
 
@@ -47,7 +51,8 @@ class PlatformScreen extends Screen
      *
      * @return \Orchid\Screen\Layout[]
      */
-    public function layout(): iterable {
+    public function layout(): iterable
+    {
         return [
             Layout::view('platform::partials.update-assets'),
             Layout::view('platform::partials.welcome'),

@@ -11,38 +11,28 @@ use Illuminate\Support\Facades\Auth;
 
 class ComplaintController extends Controller
 {
-    /**
-     * @param ComplaintService $complaintService
-     * @param PasteService $pasteService
-     */
     public function __construct(
         private readonly ComplaintService $complaintService,
         private readonly PasteService $pasteService
-    ){}
+    ) {}
 
-    /**
-     * @param string $identifier
-     * @return View
-     */
-    function show(string $identifier): View {
+    public function show(string $identifier): View
+    {
         $paste = $this->pasteService->getByIdentifier($identifier);
 
         return View('complaints.show', compact('paste', 'identifier'));
     }
 
     /**
-     * @param ComplaintDTO $request
-     * @param string $identifier
-     * @return RedirectResponse
      * @throws \Exception
      */
-    function store(ComplaintDTO $request, string $identifier): RedirectResponse {
+    public function store(ComplaintDTO $request, string $identifier): RedirectResponse
+    {
         try {
             $this->complaintService->store($request, $identifier, Auth::user());
 
             return redirect()->route('paste.home');
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return redirect()->back()->withErrors([$exception->getMessage()]);
         }
     }

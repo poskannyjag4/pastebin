@@ -11,5 +11,5 @@ class UserDTO extends Dto
         public readonly string $name,
         public readonly string $password,
         public readonly string $apiToken
-    ){}
+    ) {}
 }

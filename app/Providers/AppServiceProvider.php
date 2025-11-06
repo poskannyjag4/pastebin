@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\VisibilityEnum;
 use App\Models\Paste;
 use App\Models\User;
 use Illuminate\Support\ServiceProvider;
@@ -23,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         \Gate::define('ViewPrivatePaste', function (User $user, Paste $paste) {
-            return $user->id === $paste->user_id;
+            return $paste->visibility === VisibilityEnum::private->name && $user->id === $paste->user_id;
         });
     }
 }

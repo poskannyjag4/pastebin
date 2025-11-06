@@ -2,10 +2,7 @@
 
 namespace App\DTOs;
 
-use App\Enums\LanguageEnum;
-use App\Enums\VisibilityEnum;
-use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\EnumCast;
+use Spatie\LaravelData\Attributes\Validation\Between;
 use Spatie\LaravelData\Dto;
 
 class PasteStoreDTO extends Dto
@@ -14,7 +11,8 @@ class PasteStoreDTO extends Dto
         public readonly string $text,
         public readonly string $title,
         public readonly string $programming_language,
+        #[Between(0, 3155760000)]
         public readonly int $expires_at,
         public readonly string $visibility,
-    ){}
+    ) {}
 }
