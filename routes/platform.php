@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Main
+Route::screen('/profile', PlatformScreen::class)->name('platform.profile');
 Route::screen('/main', PlatformScreen::class)
     ->name('platform.main');
 

@@ -18,11 +18,10 @@ return new class extends Migration
             $table->dateTime('expires_at')->nullable();
             $table->string('visibility');
             $table->string('programming_language');
-            $table->unsignedBigInteger('user_id')->nullable();
             $table->uuid('token')->unique()->nullable();
             $table->timestamps();
 
-            $table->foreignId('user_id')->constrained('users')->onDelete('set null');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
         });
     }
 

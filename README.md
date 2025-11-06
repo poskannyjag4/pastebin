@@ -6,6 +6,7 @@
 2. создать файл .env по шаблону в .env.example
 3. запустить `docker-compose up -d --build`
 4. в контейнере php-fpm ввести команды `php artisan key:generate` и `php artisan migrate`
+5. Чтобы заполнить бд тестовыми данными(пользователи и пасты) в контейнере php-fpm ввести коману `php artisan db:seed` 
 
 # Возможности Сайта
 ### /

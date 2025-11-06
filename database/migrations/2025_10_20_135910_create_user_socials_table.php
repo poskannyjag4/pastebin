@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('provider_name')->nullable();
             $table->string('provider_id')->nullable();
-            $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
             $table->foreignId('user_id')->constrained('users')->onDelete('set null');

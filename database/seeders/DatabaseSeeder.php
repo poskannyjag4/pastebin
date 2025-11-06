@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Complaint;
 use App\Models\Paste;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -14,8 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         User::factory(10)->has(Paste::factory()->count(2))->create();
         Paste::factory(15)->create();
     }

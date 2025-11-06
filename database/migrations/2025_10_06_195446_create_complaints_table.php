@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('complaints', function (Blueprint $table) {
             $table->id();
             $table->text('details');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreignId('user_id')->constrained('users');
-            $table->unsignedBigInteger('paste_id');
+            $table->foreignId('user_id')->constrained('users')->onDelete('set null');
             $table->foreignId('paste_id')->constrained('pastes');
             $table->timestamps();
         });
