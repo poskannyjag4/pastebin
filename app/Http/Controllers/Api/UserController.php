@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function index()
+    /**
+     * @return UserResource
+     */
+    public function index(): UserResource
     {
         return new UserResource(Auth::user());
     }

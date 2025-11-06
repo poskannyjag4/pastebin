@@ -6,3 +6,11 @@ parameters:
 
     paths:
         - app
+    excludePaths:
+        - app/Orchid/Filters
+        - app/Orchid/Layouts
+        - app/Orchid/Filters
+        - app/Orchid/Presenters
+        - app/Orchid/Screens/Examples
+        - app/Orchid/Screens/Role
+        - app/Orchid/Screens/User

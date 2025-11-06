@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Orchid\Screen\AsSource;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property-read \App\Models\Paste|null $paste
@@ -33,7 +32,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Complaint extends Model
 {
-    use AsSource, HasFactory;
+    use AsSource;
 
     protected $table = 'complaints';
 
