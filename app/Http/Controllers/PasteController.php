@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\PasteStoreDTO;
+use App\Http\Requests\PasteStoreRequest;
 use App\Services\PasteService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -21,6 +22,7 @@ class PasteController extends Controller
     public function index(): View
     {
 
+        // dd(PasteStoreDTO::getValidationRules([]));
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
 
@@ -34,10 +36,11 @@ class PasteController extends Controller
     /**
      * Сохраняет пасту в бд
      */
-    public function store(PasteStoreDTO $request): RedirectResponse
+    public function store(PasteStoreRequest $request): RedirectResponse
     {
+        $pasteDto = PasteStoreDTO::from($request->validated());
         try {
-            $identifier = $this->pasteService->store($request, Auth::user());
+            $identifier = $this->pasteService->store($pasteDto, Auth::user());
         } catch (\InvalidArgumentException $e) {
             return redirect()->back()->withInput()->withErrors(['expires_at' => 'Выбрано недопустимое время истечения. Пожалуйста, выберите значение из списка.']);
         }
