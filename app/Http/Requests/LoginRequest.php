@@ -26,34 +26,34 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => ['required', 'string', 'email', 'exists:users,email'],
-            'password' => ['required', 'string']
+            'password' => ['required', 'string'],
         ];
     }
 
     /**
      * Метод делает поптыку аутентификация и в случае если неверных попыток больше 5, выдает ошибку
-     * 
-     * @return void
+     *
      * @throws ValidationException
      */
-    public function authenticate(): void{
+    public function authenticate(): void
+    {
         if (RateLimiter::tooManyAttempts($this->email, 5)) {
-                $seconds = RateLimiter::availableIn($this->email);
-                throw ValidationException::withMessages([
-                    'email' => 'Слишком много попыток! Попробуйте через '.ceil($seconds / 60).' минут!'
-                ]);
-            }
+            $seconds = RateLimiter::availableIn($this->email);
+            throw ValidationException::withMessages([
+                'email' => 'Слишком много попыток! Попробуйте через '.ceil($seconds / 60).' минут!',
+            ]);
+        }
 
-            if (!Auth::attempt([
-                'email' => $this->email,
-                'password' => $this->password,
-            ])) {
-                RateLimiter::hit($this->email);
-                throw ValidationException::withMessages([
-                    'email' => 'Неправильный логин или пароль!'
-                ]);
-            }
+        if (! Auth::attempt([
+            'email' => $this->email,
+            'password' => $this->password,
+        ])) {
+            RateLimiter::hit($this->email);
+            throw ValidationException::withMessages([
+                'email' => 'Неправильный логин или пароль!',
+            ]);
+        }
 
-            RateLimiter::clear($this->email);
+        RateLimiter::clear($this->email);
     }
 }

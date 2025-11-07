@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Complaint;
 use App\Models\Paste;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;

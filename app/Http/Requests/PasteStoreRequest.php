@@ -24,15 +24,15 @@ class PasteStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-         $allowedLanguages = array_map(fn($language) => $language->name, LanguageEnum::cases());
-        $allowedVisibility = array_map(fn($visibility) => $visibility->name, VisibilityEnum::cases());
+        $allowedLanguages = array_map(fn ($language) => $language->name, LanguageEnum::cases());
+        $allowedVisibility = array_map(fn ($visibility) => $visibility->name, VisibilityEnum::cases());
 
         return [
             'text' => ['required', 'string'],
             'title' => ['required', 'string'],
             'programming_language' => ['required', 'string', Rule::in($allowedLanguages)],
             'expires_at' => ['required', 'numeric', 'between:0,3155760000'],
-            'visibility' => ['required', 'string', Rule::in($allowedVisibility)]
+            'visibility' => ['required', 'string', Rule::in($allowedVisibility)],
         ];
     }
 }

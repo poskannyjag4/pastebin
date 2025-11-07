@@ -2,7 +2,6 @@
 
 namespace App\DTOs;
 
-use Spatie\LaravelData\Attributes\Validation\Between;
 use Spatie\LaravelData\Dto;
 
 class PasteStoreDTO extends Dto

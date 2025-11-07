@@ -6,15 +6,15 @@ use App\DTOs\ComplaintDTO;
 use App\DTOs\PasteDTO;
 use App\DTOs\PasteStoreDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ComplaintStoreRequest;
+use App\Http\Requests\PasteStoreRequest;
 use App\Http\Resources\ComplaintResource;
 use App\Http\Resources\PasteResource;
-use App\Models\User;
 use App\Services\ComplaintService;
 use App\Services\PasteService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 
 class PasteController extends Controller
 {
@@ -23,8 +23,9 @@ class PasteController extends Controller
         private readonly ComplaintService $complaintService,
     ) {}
 
-    public function store(PasteStoreDTO $data): JsonResponse|PasteResource
+    public function store(PasteStoreRequest $request): JsonResponse|PasteResource
     {
+        $data = PasteStoreDTO::from($request->validated());
         try {
             $identifier = $this->pasteService->store($data, Auth::user());
 
@@ -76,10 +77,11 @@ class PasteController extends Controller
         ]));
     }
 
-    public function addComplaint(string $identifier, ComplaintDto $request): ComplaintResource|JsonResponse
+    public function addComplaint(string $identifier, ComplaintStoreRequest $request): ComplaintResource|JsonResponse
     {
+        $data = ComplaintDTO::from($request->validated());
         try {
-            $complaint = $this->complaintService->store($request, $identifier, Auth::user());
+            $complaint = $this->complaintService->store($data, $identifier, Auth::user());
 
             return new ComplaintResource($complaint);
         } catch (\Exception $e) {

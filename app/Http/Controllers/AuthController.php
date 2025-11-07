@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\DTOs\LoginDTO;
 use App\DTOs\RegisterDTO;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -49,6 +48,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+
         return redirect()->intended('/');
     }
 

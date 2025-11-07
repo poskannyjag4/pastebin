@@ -22,7 +22,7 @@ class ComplaintStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'details' => ['required', 'string']
+            'details' => ['required', 'string'],
         ];
     }
 }
