@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\ComplaintDTO;
+use App\Http\Requests\ComplaintStoreRequest;
 use App\Services\ComplaintService;
 use App\Services\PasteService;
 use Illuminate\Contracts\View\View;
@@ -26,10 +27,11 @@ class ComplaintController extends Controller
     /**
      * @throws \Exception
      */
-    public function store(ComplaintDTO $request, string $identifier): RedirectResponse
+    public function store(ComplaintStoreRequest $request, string $identifier): RedirectResponse
     {
+        $complaintDto = ComplaintDTO::from($request->validated());
         try {
-            $this->complaintService->store($request, $identifier, Auth::user());
+            $this->complaintService->store($complaintDto, $identifier, Auth::user());
 
             return redirect()->route('paste.home');
         } catch (\Exception $exception) {
