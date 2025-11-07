@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\DTOs\LoginDTO;
 use App\DTOs\RegisterDTO;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Models\UserSocial;
 use App\Services\UserService;
@@ -30,12 +32,13 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function register(RegisterDTO $request): RedirectResponse
+    public function register(RegisterRequest $request): RedirectResponse
     {
+        $registerDto = RegisterDTO::from($request->validated());
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $registerDto->name,
+            'email' => $registerDto->email,
+            'password' => Hash::make($registerDto->password),
         ]);
 
         Auth::login($user);
@@ -43,8 +46,9 @@ class AuthController extends Controller
         return redirect()->intended('/');
     }
 
-    public function login(LoginDTO $request): RedirectResponse
+    public function login(LoginRequest $request): RedirectResponse
     {
+        $request->authenticate();
         return redirect()->intended('/');
     }
 
