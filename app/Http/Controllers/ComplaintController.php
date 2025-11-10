@@ -21,7 +21,10 @@ class ComplaintController extends Controller
     {
         $paste = $this->pasteService->getByIdentifier($identifier);
 
-        return View('complaints.show', compact('paste', 'identifier'));
+        return View('complaints.show', [
+            'paste' => $paste,
+            'identifier' => $identifier,
+        ]);
     }
 
     /**

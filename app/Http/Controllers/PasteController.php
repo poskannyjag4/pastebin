@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\DTOs\PasteStoreDTO;
 use App\Http\Requests\PasteStoreRequest;
+use App\Models\Paste;
+use App\Repositories\PasteRepository;
 use App\Services\PasteService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -13,7 +15,7 @@ use Illuminate\Support\Str;
 class PasteController extends Controller
 {
     public function __construct(
-        private readonly PasteService $pasteService
+        private readonly PasteService $pasteService,
     ) {}
 
     /**
@@ -21,8 +23,7 @@ class PasteController extends Controller
      */
     public function index(): View
     {
-
-        // dd(PasteStoreDTO::getValidationRules([]));
+        dd(Paste::paginate(10));
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
 
@@ -30,7 +31,10 @@ class PasteController extends Controller
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
 
-        return view('pastes.index', compact('latestPastes', 'latestUserPastes'));
+        return view('pastes.index', [
+            'latestPastes' => $latestPastes,
+            'latestUserPastes' => $latestUserPastes,
+        ]);
     }
 
     /**
@@ -65,12 +69,12 @@ class PasteController extends Controller
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
 
-        $pastes['latestPastes'] = $latestPastes;
-        $pastes['latestUserPastes'] = $latestUserPastes;
-        $pastes['paste'] = $paste;
-        $pastes['identifier'] = $hashId;
-
-        return view('pastes.show', $pastes);
+        return view('pastes.show', [
+            'latestPastes' => $latestPastes,
+            'latestUserPastes' => $latestUserPastes,
+            'pastes' => $paste,
+            'identifier' => $hashId,
+        ]);
     }
 
     /**
@@ -86,12 +90,12 @@ class PasteController extends Controller
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
 
-        $pastes['latestPastes'] = $latestPastes;
-        $pastes['latestUserPastes'] = $latestUserPastes;
-        $pastes['paste'] = $paste;
-        $pastes['identifier'] = $uuid;
-
-        return view('pastes.show', $pastes);
+        return view('pastes.show', [
+            'latestPastes' => $latestPastes,
+            'latestUserPastes' => $latestUserPastes,
+            'pastes' => $paste,
+            'identifier' => $uuid,
+        ]);
     }
 
     /**

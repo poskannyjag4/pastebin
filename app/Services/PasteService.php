@@ -7,6 +7,7 @@ use App\DTOs\PasteStoreDTO;
 use App\Enums\VisibilityEnum;
 use App\Models\Paste;
 use App\Models\User;
+use App\Repositories\PasteRepository;
 use Hashids\Hashids;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -17,7 +18,8 @@ use Illuminate\Support\Str;
 class PasteService
 {
     public function __construct(
-        private readonly Hashids $hashids
+        private readonly Hashids $hashids,
+        private readonly PasteRepository $repository,
     ) {}
 
     /**
@@ -25,7 +27,7 @@ class PasteService
      */
     public function getLatestPastes(): LatestPastesDTO
     {
-        $latestPastes = Paste::getLatestPublic()->get()->mapWithKeys(
+        $latestPastes = $this->repository->getLatestPublic()->mapWithKeys(
             function (Paste $paste) {
                 return [$this->hashids->encode($paste->id) => $paste];
             }

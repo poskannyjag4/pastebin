@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\RegisterDTO;
+use App\DTOs\UserDataFromSocialDTO;
+use App\DTOs\UserSocialCreationDTO;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
@@ -12,6 +14,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\RedirectResponse as SocialiteRedirectResponse;
 
@@ -45,6 +48,9 @@ class AuthController extends Controller
         return redirect()->intended('/');
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function login(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
@@ -69,38 +75,19 @@ class AuthController extends Controller
         try {
             $socialUser = Socialite::driver($provider)->user();
 
-            $newUserSocial = new UserSocial;
-            $newUserSocial->provider_id = $socialUser->getId();
-            $newUserSocial->provider_name = $provider;
-
-            $user = User::whereEmail($socialUser->getEmail())->first();
-
-            if (! is_null($user)) {
-                if (UserSocial::whereProviderId($newUserSocial->provider_id)->count() != 0) {
-                    Auth::login($user);
-
-                    return redirect()->route('paste.home');
-                }
-
-                $newUserSocial->user()->associate($user);
-                $newUserSocial->save();
-
-                Auth::login($user);
-
-                return redirect()->route('paste.home');
-            }
-
-            $user = User::create([
-                'name' => $socialUser->getNickname(),
+            $user = $this->userService->findOrCreateUserForSocials(UserDataFromSocialDTO::from([
                 'email' => $socialUser->getEmail(),
-            ]);
+                'name' => $socialUser->getNickname(),
+            ]));
 
-            $newUserSocial->user()->associate($user);
-            $newUserSocial->save();
+            $this->userService->createAndAttachUserSocial(UserSocialCreationDTO::from([
+                'provider_id' => $socialUser->getId(),
+                'provider_name' => $provider
+            ]), $user->id);
 
             Auth::login($user);
 
-            return redirect('/');
+            return redirect()->route('paste.home');
         } catch (\Exception $e) {
             return redirect()->route('login.show')->with('email', 'Что-то пошло не так при входе через '.$provider);
         }

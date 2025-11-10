@@ -13,6 +13,7 @@
         "laravel/socialite": "^5.23",
         "laravel/tinker": "^2.10.1",
         "orchid/platform": "*",
+        "prettus/l5-repository": "^3.0",
         "scrivo/highlight.php": "^9.18",
         "spatie/laravel-data": "^4.17",
         "wotz/laravel-swagger-ui": "^1.2"
