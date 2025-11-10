@@ -23,7 +23,6 @@ class PasteController extends Controller
      */
     public function index(): View
     {
-        dd(Paste::paginate(10));
         $latestPastes = $this->pasteService->getLatestPastes();
         $latestUserPastes = [];
 

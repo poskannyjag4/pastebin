@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTOs\LatestPastesDTO;
+use App\DTOs\PasteDTO;
 use App\DTOs\PasteStoreDTO;
 use App\Enums\VisibilityEnum;
 use App\Models\Paste;
@@ -13,6 +14,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class PasteService
@@ -24,16 +26,26 @@ class PasteService
 
     /**
      * Возвращает список из 10 последних публичных паст
+     *
+     * @return Collection<int,PasteDTO>
      */
-    public function getLatestPastes(): LatestPastesDTO
+    public function getLatestPastes(): Collection
     {
-        $latestPastes = $this->repository->getLatestPublic()->mapWithKeys(
-            function (Paste $paste) {
-                return [$this->hashids->encode($paste->id) => $paste];
-            }
-        );
+        $latestPastes = $this->repository->getLatestPublic();
+        dd($this->repository->getLatestUser(1));
+//        ->mapWithKeys(
+//        function (Paste $paste) {
+//            return [$this->hashids->encode($paste->id) => $paste];
+//        }
+//    );
 
-        return LatestPastesDTO::fromArray($latestPastes);
+        return PasteDTO::collect($latestPastes->map(function ($paste) {
+            return PasteDTO::from([
+                'paste'=>$paste,
+                //@phpstan-ignore-next-line
+                'identifier'=>$this->hashids->encode($paste->id)
+            ]);
+        }));
     }
 
     /**
@@ -41,11 +53,13 @@ class PasteService
      */
     public function getLatestUserPastes(User $user): LatestPastesDTO
     {
-        $latestUserPastes = Paste::getLatestUser($user->id)->get()->mapWithKeys(
-            function (Paste $paste) {
-                return [$this->hashids->encode($paste->id) => $paste];
-            }
-        );
+        $latestUserPastes = Paste::getLatestUser($user->id)->get();
+
+//            ->mapWithKeys(
+//            function (Paste $paste) {
+//                return [$this->hashids->encode($paste->id) => $paste];
+//            }
+//        );
 
         return LatestPastesDTO::fromArray($latestUserPastes);
     }
