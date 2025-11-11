@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\DTOs\LatestPastesDTO;
+use \Illuminate\Pagination\Paginator;
 use App\DTOs\PasteDTO;
 use App\DTOs\PasteStoreDTO;
 use App\Enums\VisibilityEnum;
@@ -10,12 +10,12 @@ use App\Models\Paste;
 use App\Models\User;
 use App\Repositories\PasteRepository;
 use Hashids\Hashids;
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class PasteService
 {
@@ -32,7 +32,7 @@ class PasteService
     public function getLatestPastes(): Collection
     {
         $latestPastes = $this->repository->getLatestPublic();
-        dd($this->repository->getLatestUser(1));
+//        dd($this->repository->getLatestUser(1));
 //        ->mapWithKeys(
 //        function (Paste $paste) {
 //            return [$this->hashids->encode($paste->id) => $paste];
@@ -50,10 +50,13 @@ class PasteService
 
     /**
      * Возвращает список из 10 последних паст пользователя
+     *
+     * @return Collection<int,PasteDTO>
      */
-    public function getLatestUserPastes(User $user): LatestPastesDTO
+    public function getLatestUserPastes(User $user): Collection
     {
-        $latestUserPastes = Paste::getLatestUser($user->id)->get();
+        $latestUserPastes = $this->repository->getLatestUser($user->id);
+//            Paste::getLatestUser($user->id)->get();
 
 //            ->mapWithKeys(
 //            function (Paste $paste) {
@@ -61,11 +64,19 @@ class PasteService
 //            }
 //        );
 
-        return LatestPastesDTO::fromArray($latestUserPastes);
+
+        return PasteDTO::collect($latestUserPastes->map(function ($paste) {
+            return PasteDTO::from([
+                'paste'=>$paste,
+                //@phpstan-ignore-next-line
+                'identifier'=>$this->hashids->encode($paste->id)
+            ]);
+        }));
     }
 
     /**
      * Создает новую пасту и создает для нее hashid
+     * @throws ValidatorException
      */
     public function store(PasteStoreDTO $data, ?User $user): string
     {
@@ -80,9 +91,10 @@ class PasteService
         ];
 
         if (is_null($user)) {
-            $paste = Paste::create($dataForPaste);
+            $paste = $this->repository->create($dataForPaste);
         } else {
-            $paste = $user->pastes()->create($dataForPaste);
+            $dataForPaste['user_id'] = $user->id;
+            $paste = $this->repository->create($dataForPaste);
         }
 
         if (! is_null($paste->token)) {
@@ -95,10 +107,10 @@ class PasteService
     /**
      * Возвращает пасту по hashid и проверяет доступность пасты
      */
-    public function get(string $hashId): Paste
+    public function get(string $hashId): PasteDTO
     {
         $id = $this->hashids->decode($hashId)[0];
-        $paste = Paste::findOrFail($id);
+        $paste = $this->repository->find($id);
 
         if (! is_null($paste->expires_at) && ($paste->expires_at < Carbon::now())) {
             abort(410, 'Срок действия этой страницы закончился!');
@@ -110,36 +122,41 @@ class PasteService
             }
         }
 
-        return $paste;
+        return PasteDTO::from([
+            'paste'=>$paste,
+            //@phpstan-ignore-next-line
+            'identifier'=>$this->hashids->encode($paste->id)
+        ]);
     }
 
-    public function getUnlisted(string $uuid): Paste
+    public function getUnlisted(string $uuid): PasteDTO
     {
-        $paste = Paste::getByToken($uuid)->first();
-
+        $paste = $this->repository->findByField('token', $uuid)->first();
         if (is_null($paste->expires_at) || $paste->expires_at > Carbon::now() || is_null($paste)) {
-            return $paste;
+            return PasteDTO::from([
+                'paste'=>$paste,
+                //@phpstan-ignore-next-line
+                'identifier'=>$this->hashids->encode($paste->id)
+            ]);
         }
 
         abort(410, 'Срок действия этой страницы закончился!');
     }
 
     /**
-     * @return array{
-     *     pastes: Paginator<int, Paste>,
-     *     hashIds: string[]
-     * }
+     * @return Paginator
      */
-    public function getUserPastes(int $id): array
+    public function getUserPastes(int $id): Paginator
     {
-        $pastes = Paste::getForUser($id)->simplePaginate();
-        $hashIds = [];
-
-        foreach ($pastes->items() as $paste) {
-            $hashIds[] = $this->hashids->encode($paste->id);
-        }
-
-        return compact('pastes', 'hashIds');
+        $pastes = $this->repository->findByField('user_id', $id);
+        $data = PasteDTO::collect($pastes->map(function ($paste) {
+            return PasteDTO::from([
+                'paste'=>$paste,
+                //@phpstan-ignore-next-line
+                'identifier'=>$this->hashids->encode($paste->id)
+            ]);
+        }));
+        return new Paginator($data , 10);
     }
 
     /**

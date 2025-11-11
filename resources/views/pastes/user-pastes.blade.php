@@ -21,17 +21,17 @@
                     <tr>
                         <td>
 
-                            <a href="{{ route('paste.show', $hashIds[$loop->index]) }}" class="paste-title-link">
-                                {{ $paste->title}}
+                            <a href="{{ route('paste.show', $paste->identifier) }}" class="paste-title-link">
+                                {{ $paste->paste->title}}
                             </a>
                         </td>
-                        <td>{{ $paste->programming_language }}</td>
+                        <td>{{ $paste->paste->programming_language }}</td>
                         <td>
-                            <span class="access-badge access-{{ $paste->visibility }}">
-                                    {{ \App\Enums\VisibilityEnum::fromName($paste->visibility) }}
+                            <span class="access-badge access-{{ $paste->paste->visibility }}">
+                                    {{ \App\Enums\VisibilityEnum::fromName($paste->paste->visibility) }}
                                 </span>
                         </td>
-                        <td>{{ $paste->created_at->diffForHumans() }}</td>
+                        <td>{{ $paste->paste->created_at->diffForHumans() }}</td>
                     </tr>
                 @endforeach
                 </tbody>

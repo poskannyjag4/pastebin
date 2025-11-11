@@ -5,11 +5,11 @@
 @section('content')
     <div class="paste-view-container">
         <div class="paste-meta-header">
-            <h1 class="paste-title">{{ $paste->title ?? 'Без названия' }}</h1>
+            <h1 class="paste-title">{{ $paste->paste->title ?? 'Без названия' }}</h1>
             <div class="meta-details">
-                <span><strong>Автор:</strong> {{ $paste->user->name ?? 'Аноним' }}</span>
-                <span><strong>Синтаксис:</strong> {{ $paste->programming_language }}</span>
-                <span><strong>Создано:</strong> {{ $paste->created_at->format('d.m.Y в H:i') }}</span>
+                <span><strong>Автор:</strong> {{ $paste->paste->user->name ?? 'Аноним' }}</span>
+                <span><strong>Синтаксис:</strong> {{ $paste->paste->programming_language }}</span>
+                <span><strong>Создано:</strong> {{ $paste->paste->created_at->format('d.m.Y в H:i') }}</span>
             </div>
         </div>
 
@@ -17,18 +17,18 @@
 
             <button id="copyLinkButton"
                     class="action-button"
-                    data-visibility="{{ $paste->visibility  }}"
-                    data-identifier="{{ $identifier }}">
+                    data-visibility="{{ $paste->paste->visibility  }}"
+                    data-identifier="{{ $paste->identifier }}">
                 Скопировать ссылку
             </button>
             <button id="copyContentButton" class="action-button">Копировать содержимое</button>
-            <a href="@if(Route::currentRouteName() == 'paste.share') {{route('complaint.storeUuid', $identifier)}} @else {{route('complaint.storeHashId', $identifier)}} @endif" class="action-btn report-btn">Пожаловаться</a>
+            <a href="@if(Route::currentRouteName() == 'paste.share') {{route('complaint.storeUuid', $paste->identifier)}} @else {{route('complaint.storeHashId', $paste->identifier)}} @endif" class="action-btn report-btn">Пожаловаться</a>
         </div>
         <div class="paste-code-block">
-            <pre><code class="language-{{$paste->programming_language}}">{{ $paste->text }}</code></pre>
+            <pre><code class="language-{{$paste->paste->programming_language}}">{{ $paste->paste->text }}</code></pre>
         </div>
 
-        <div id="raw-content" style="display: none;">{{ $paste->text }}</div>
+        <div id="raw-content" style="display: none;">{{ $paste->paste->text }}</div>
     </div>
 @endsection
 

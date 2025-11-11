@@ -29,7 +29,6 @@ class PasteController extends Controller
         if (Auth::check()) {
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
-
         return view('pastes.index', [
             'latestPastes' => $latestPastes,
             'latestUserPastes' => $latestUserPastes,
@@ -71,7 +70,7 @@ class PasteController extends Controller
         return view('pastes.show', [
             'latestPastes' => $latestPastes,
             'latestUserPastes' => $latestUserPastes,
-            'pastes' => $paste,
+            'paste' => $paste,
             'identifier' => $hashId,
         ]);
     }
@@ -92,7 +91,7 @@ class PasteController extends Controller
         return view('pastes.show', [
             'latestPastes' => $latestPastes,
             'latestUserPastes' => $latestUserPastes,
-            'pastes' => $paste,
+            'paste' => $paste,
             'identifier' => $uuid,
         ]);
     }
@@ -108,11 +107,12 @@ class PasteController extends Controller
         if (Auth::check()) {
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
-
-        $pastes['latestPastes'] = $latestPastes;
-        $pastes['latestUserPastes'] = $latestUserPastes;
         $userPastes = $this->pasteService->getUserPastes(Auth::id());
 
-        return view('pastes.user-pastes', [...$userPastes, ...$pastes]);
+        return view('pastes.user-pastes', [
+            'latestPastes' => $latestPastes,
+            'latestUserPastes'=>$latestUserPastes,
+            'pastes'=>$userPastes,
+        ]);
     }
 }
