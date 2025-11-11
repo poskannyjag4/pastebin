@@ -5,12 +5,14 @@ namespace App\Services;
 use App\DTOs\ComplaintDTO;
 use App\Models\Complaint;
 use App\Models\User;
+use App\Repositories\ComplaintRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ComplaintService
 {
     public function __construct(
-        private readonly PasteService $pasteService
+        private readonly PasteService $pasteService,
+        private readonly ComplaintRepository $complaintRepository,
     ) {}
 
     /**
@@ -19,8 +21,7 @@ class ComplaintService
     public function store(ComplaintDTO $data, string $identifier, ?User $user): Complaint
     {
         $paste = $this->pasteService->getByIdentifier($identifier);
-
-        return Complaint::create([
+        return $this->complaintRepository->create([
             'details' => $data->details,
             'paste_id' => $paste->id,
             'user_id' => $user->id ?? null,
@@ -32,6 +33,6 @@ class ComplaintService
      */
     public function getComplaints(): LengthAwarePaginator
     {
-        return Complaint::with(['user', 'paste'])->paginate(15);
+        return $this->complaintRepository->getPaginated();
     }
 }
