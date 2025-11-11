@@ -7,9 +7,8 @@ use Prettus\Repository\Eloquent\BaseRepository;
 
 class UserSocialRepository extends BaseRepository
 {
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function model()
     {

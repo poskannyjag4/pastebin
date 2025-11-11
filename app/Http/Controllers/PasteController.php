@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\DTOs\PasteStoreDTO;
 use App\Http\Requests\PasteStoreRequest;
-use App\Models\Paste;
-use App\Repositories\PasteRepository;
 use App\Services\PasteService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class PasteController extends Controller
 {
@@ -29,6 +28,7 @@ class PasteController extends Controller
         if (Auth::check()) {
             $latestUserPastes = $this->pasteService->getLatestUserPastes(Auth::user());
         }
+
         return view('pastes.index', [
             'latestPastes' => $latestPastes,
             'latestUserPastes' => $latestUserPastes,
@@ -43,7 +43,7 @@ class PasteController extends Controller
         $pasteDto = PasteStoreDTO::from($request->validated());
         try {
             $identifier = $this->pasteService->store($pasteDto, Auth::user());
-        } catch (\InvalidArgumentException $e) {
+        } catch (ValidatorException $e) {
             return redirect()->back()->withInput()->withErrors(['expires_at' => 'Выбрано недопустимое время истечения. Пожалуйста, выберите значение из списка.']);
         }
 
@@ -111,8 +111,8 @@ class PasteController extends Controller
 
         return view('pastes.user-pastes', [
             'latestPastes' => $latestPastes,
-            'latestUserPastes'=>$latestUserPastes,
-            'pastes'=>$userPastes,
+            'latestUserPastes' => $latestUserPastes,
+            'pastes' => $userPastes,
         ]);
     }
 }

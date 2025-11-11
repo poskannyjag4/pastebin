@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use \Illuminate\Pagination\Paginator;
 use App\DTOs\PasteDTO;
 use App\DTOs\PasteStoreDTO;
 use App\Enums\VisibilityEnum;
@@ -10,8 +9,8 @@ use App\Models\Paste;
 use App\Models\User;
 use App\Repositories\PasteRepository;
 use Hashids\Hashids;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -32,50 +31,31 @@ class PasteService
     public function getLatestPastes(): Collection
     {
         $latestPastes = $this->repository->getLatestPublic();
-//        dd($this->repository->getLatestUser(1));
-//        ->mapWithKeys(
-//        function (Paste $paste) {
-//            return [$this->hashids->encode($paste->id) => $paste];
-//        }
-//    );
 
         return PasteDTO::collect($latestPastes->map(function ($paste) {
             return PasteDTO::from([
-                'paste'=>$paste,
-                //@phpstan-ignore-next-line
-                'identifier'=>$this->hashids->encode($paste->id)
+                'paste' => $paste,
+                'identifier' => $this->hashids->encode($paste->id),
             ]);
         }));
     }
 
     /**
-     * Возвращает список из 10 последних паст пользователя
-     *
      * @return Collection<int,PasteDTO>
      */
     public function getLatestUserPastes(User $user): Collection
     {
         $latestUserPastes = $this->repository->getLatestUser($user->id);
-//            Paste::getLatestUser($user->id)->get();
-
-//            ->mapWithKeys(
-//            function (Paste $paste) {
-//                return [$this->hashids->encode($paste->id) => $paste];
-//            }
-//        );
-
 
         return PasteDTO::collect($latestUserPastes->map(function ($paste) {
             return PasteDTO::from([
-                'paste'=>$paste,
-                //@phpstan-ignore-next-line
-                'identifier'=>$this->hashids->encode($paste->id)
+                'paste' => $paste,
+                'identifier' => $this->hashids->encode($paste->id),
             ]);
         }));
     }
 
     /**
-     * Создает новую пасту и создает для нее hashid
      * @throws ValidatorException
      */
     public function store(PasteStoreDTO $data, ?User $user): string
@@ -104,9 +84,6 @@ class PasteService
         return $this->hashids->encode($paste->id);
     }
 
-    /**
-     * Возвращает пасту по hashid и проверяет доступность пасты
-     */
     public function get(string $hashId): PasteDTO
     {
         $id = $this->hashids->decode($hashId)[0];
@@ -123,9 +100,8 @@ class PasteService
         }
 
         return PasteDTO::from([
-            'paste'=>$paste,
-            //@phpstan-ignore-next-line
-            'identifier'=>$this->hashids->encode($paste->id)
+            'paste' => $paste,
+            'identifier' => $this->hashids->encode($paste->id),
         ]);
     }
 
@@ -134,9 +110,8 @@ class PasteService
         $paste = $this->repository->findByField('token', $uuid)->first();
         if (is_null($paste->expires_at) || $paste->expires_at > Carbon::now() || is_null($paste)) {
             return PasteDTO::from([
-                'paste'=>$paste,
-                //@phpstan-ignore-next-line
-                'identifier'=>$this->hashids->encode($paste->id)
+                'paste' => $paste,
+                'identifier' => $this->hashids->encode($paste->id),
             ]);
         }
 
@@ -144,34 +119,30 @@ class PasteService
     }
 
     /**
-     * @return Paginator
+     * @return Paginator<int,PasteDTO>
      */
     public function getUserPastes(int $id): Paginator
     {
         $pastes = $this->repository->findByField('user_id', $id);
         $data = PasteDTO::collect($pastes->map(function ($paste) {
             return PasteDTO::from([
-                'paste'=>$paste,
-                //@phpstan-ignore-next-line
-                'identifier'=>$this->hashids->encode($paste->id)
+                'paste' => $paste,
+                'identifier' => $this->hashids->encode($paste->id),
             ]);
         }));
-        return new Paginator($data , 10);
+
+        return new Paginator($data, 10);
     }
 
     /**
      * Возвращает пасту по неопределенному указателю
      */
-    public function getByIdentifier(string $identifier): Paste
+    public function getByIdentifier(string $identifier): PasteDTO
     {
-        try {
-            if (Str::isUuid($identifier)) {
-                $paste = $this->getUnlisted($identifier);
-            } else {
-                $paste = $this->get($identifier);
-            }
-        } catch (ModelNotFoundException $e) {
-            throw $e;
+        if (Str::isUuid($identifier)) {
+            $paste = $this->getUnlisted($identifier);
+        } else {
+            $paste = $this->get($identifier);
         }
 
         return $paste;
@@ -182,11 +153,11 @@ class PasteService
      */
     public function getAllPastes(): LengthAwarePaginator
     {
-        return Paste::with('user')->paginate(15);
+        return $this->repository->getPaginatedWithUser();
     }
 
     public function delete(int $id): int
     {
-        return Paste::destroy($id);
+        return $this->repository->delete($id);
     }
 }

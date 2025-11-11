@@ -3,21 +3,29 @@
 namespace App\Repositories;
 
 use App\Models\Complaint;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class ComplaintRepository extends BaseRepository
 {
+    /**
+     * @var Complaint
+     */
+    protected $model;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function model()
     {
         return Complaint::class;
     }
 
-    public function getPaginated()
+    /**
+     * @return LengthAwarePaginator<int, Complaint>
+     */
+    public function getPaginated(): LengthAwarePaginator
     {
-        return $this->model()->newQuery->with(['user', 'paste'])->paginate(15);
+        return $this->model->newQuery()->with(['user', 'paste'])->paginate(15);
     }
 }

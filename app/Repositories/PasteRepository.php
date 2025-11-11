@@ -2,21 +2,22 @@
 
 namespace App\Repositories;
 
-use App\Criteria\Paste\WhereNotExpiredCriteriaCriteria;
 use App\Enums\VisibilityEnum;
 use App\Models\Paste;
 use Carbon\Carbon;
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class PasteRepository extends BaseRepository
 {
+    /**
+     * @var Paste
+     */
+    protected $model;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function model(): string
     {
@@ -24,7 +25,7 @@ class PasteRepository extends BaseRepository
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Paste>
      */
     public function getLatestPublic(): Collection
     {
@@ -35,8 +36,7 @@ class PasteRepository extends BaseRepository
     }
 
     /**
-     * @param int $id
-     * @return Collection
+     * @return Collection<int,Paste>
      */
     public function getLatestUser(int $id): Collection
     {
@@ -46,4 +46,11 @@ class PasteRepository extends BaseRepository
         })->latest()->take(10)->get();
     }
 
+    /**
+     * @return LengthAwarePaginator<int,Paste>
+     */
+    public function getPaginatedWithUser(): LengthAwarePaginator
+    {
+        return $this->model->newQuery()->with(['user'])->paginate(15);
+    }
 }

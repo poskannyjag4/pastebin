@@ -8,13 +8,11 @@ use App\DTOs\UserSocialCreationDTO;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use App\Models\UserSocial;
 use App\Services\UserService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\RedirectResponse as SocialiteRedirectResponse;
 
@@ -48,9 +46,6 @@ class AuthController extends Controller
         return redirect()->intended('/');
     }
 
-    /**
-     * @throws ValidationException
-     */
     public function login(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
@@ -82,7 +77,7 @@ class AuthController extends Controller
 
             $this->userService->createAndAttachUserSocial(UserSocialCreationDTO::from([
                 'provider_id' => $socialUser->getId(),
-                'provider_name' => $provider
+                'provider_name' => $provider,
             ]), $user->id);
 
             Auth::login($user);

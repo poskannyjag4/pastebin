@@ -42,14 +42,14 @@ class PasteController extends Controller
 
     public function getLastPastes(): AnonymousResourceCollection
     {
-        $pastes = $this->pasteService->getLatestPastes()->latestPastes;
+        $pastes = $this->pasteService->getLatestPastes();
 
         return PasteResource::collection($pastes);
     }
 
     public function getLatestUserPastes(): AnonymousResourceCollection
     {
-        $pastes = $this->pasteService->getLatestUserPastes(Auth::user())->latestPastes;
+        $pastes = $this->pasteService->getLatestUserPastes(Auth::user());
 
         return PasteResource::collection($pastes);
     }

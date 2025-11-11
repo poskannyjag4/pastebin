@@ -7,6 +7,7 @@ use App\Models\Complaint;
 use App\Models\User;
 use App\Repositories\ComplaintRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class ComplaintService
 {
@@ -16,14 +17,15 @@ class ComplaintService
     ) {}
 
     /**
-     * @throws \Exception
+     * @throws ValidatorException
      */
     public function store(ComplaintDTO $data, string $identifier, ?User $user): Complaint
     {
         $paste = $this->pasteService->getByIdentifier($identifier);
+
         return $this->complaintRepository->create([
             'details' => $data->details,
-            'paste_id' => $paste->id,
+            'paste_id' => $paste->paste->id,
             'user_id' => $user->id ?? null,
         ]);
     }

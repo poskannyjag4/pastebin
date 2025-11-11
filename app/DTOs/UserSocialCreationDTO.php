@@ -9,7 +9,5 @@ class UserSocialCreationDTO extends Dto
     public function __construct(
         public string $providerId,
         public string $providerName,
-    )
-    {
-    }
+    ) {}
 }

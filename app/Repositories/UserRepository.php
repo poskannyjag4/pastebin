@@ -3,17 +3,29 @@
 namespace App\Repositories;
 
 use App\Models\User;
-use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Eloquent\BaseRepository;
 
-class UserRepository extends BaseRepository implements UserRepositoryInterface
+class UserRepository extends BaseRepository
 {
+    /**
+     * @var User
+     */
+    protected $model;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function model(): string
     {
         return User::class;
+    }
+
+    /**
+     * @return LengthAwarePaginator<int,User>
+     */
+    public function getPaginated(): LengthAwarePaginator
+    {
+        return $this->model->newQuery()->paginate(15);
     }
 }
