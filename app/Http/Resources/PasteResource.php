@@ -12,14 +12,17 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class PasteResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
-     *
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
     {
         return [
-            'paste' => $this->paste,
+            'id' => $this->paste->id,
+            'title' => $this->paste->title,
+            'text' => $this->paste->text,
+            'programming_language' => $this->paste->programming_language,
+            'visibility' => $this->paste->visibility,
+            'expires_at' => $this->paste->expires_at,
             'identifier' => $this->identifier,
         ];
     }

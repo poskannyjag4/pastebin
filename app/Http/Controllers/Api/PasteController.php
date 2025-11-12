@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\DTOs\ComplaintDTO;
-use App\DTOs\PasteDTO;
 use App\DTOs\PasteStoreDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ComplaintStoreRequest;
@@ -29,12 +28,7 @@ class PasteController extends Controller
         try {
             $identifier = $this->pasteService->store($data, Auth::user());
 
-            $paste = $this->pasteService->getByIdentifier($identifier);
-
-            return new PasteResource(PasteDTO::from([
-                'paste' => $paste,
-                'identifier' => $identifier,
-            ]));
+            return new PasteResource($this->pasteService->getByIdentifier($identifier));
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
@@ -56,25 +50,12 @@ class PasteController extends Controller
 
     public function getPaste(string $hashId): PasteResource|JsonResponse
     {
-        $paste = $this->pasteService->getByIdentifier($hashId);
-        try {
-            return new PasteResource(PasteDTO::from([
-                'paste' => $paste,
-                'identifier' => $hashId,
-            ]));
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], $e->getCode());
-        }
+        return new PasteResource($this->pasteService->getByIdentifier($hashId));
     }
 
     public function getUnlistedPaste(string $uuid): PasteResource|JsonResponse
     {
-        $paste = $this->pasteService->getByIdentifier($uuid);
-
-        return new PasteResource(PasteDTO::from([
-            'paste' => $paste,
-            'identifier' => $uuid,
-        ]));
+        return new PasteResource($this->pasteService->getByIdentifier($uuid));
     }
 
     public function addComplaint(string $identifier, ComplaintStoreRequest $request): ComplaintResource|JsonResponse

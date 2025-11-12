@@ -47,7 +47,7 @@ class UserService
     public function generateToken(User $user): string
     {
         $userTokens = $this->personalAccessTokenRepository->findWhere([
-            'user_id' => $user->id,
+            'tokenable_id' => $user->id,
             'name' => 'access_token',
         ]);
         if ($userTokens->count() != 0) {

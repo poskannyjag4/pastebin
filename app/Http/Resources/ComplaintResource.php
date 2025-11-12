@@ -20,7 +20,11 @@ class ComplaintResource extends JsonResource
     {
         return [
             'details' => $this->details,
-            'user' => $this->user,
+            'user' => [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+                'email' => $this->user->email,
+            ],
         ];
     }
 }
