@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\DTOs\ComplaintDTO;
 use App\DTOs\PasteStoreDTO;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Web\Controller;
 use App\Http\Requests\ComplaintStoreRequest;
 use App\Http\Requests\PasteStoreRequest;
 use App\Http\Resources\ComplaintResource;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
 use App\DTOs\RegisterDTO;
 use App\DTOs\UserDataFromSocialDTO;

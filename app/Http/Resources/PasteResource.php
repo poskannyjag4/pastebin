@@ -23,6 +23,9 @@ class PasteResource extends JsonResource
             'programming_language' => $this->paste->programming_language,
             'visibility' => $this->paste->visibility,
             'expires_at' => $this->paste->expires_at,
+            'user_id' => $this->paste->user_id,
+            'created_at' => $this->paste->created_at,
+            'updated_at' => $this->paste->updated_at,
             'identifier' => $this->identifier,
         ];
     }

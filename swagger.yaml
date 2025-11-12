@@ -4,7 +4,7 @@ info:
   description: Pastebin API
   version: 1.0.0
 servers:
-  - url: 'http://localhost:92'
+  - url: 'http://localhost:92/api'
 paths:
   /pastes:
     post:
@@ -315,17 +315,19 @@ components:
           format: date-time
           description: Дата последнего обновления
           example: "2025-11-04T08:09:03.000000Z"
-        token:
+        identifier:
           type: string
-          description: Токен для доступа по ссылке, если уровень доступа - unlisted
-          nullable: true
-          example: null
+          description: идентификатор пасты(хэш или uuid)
+          example: jg6D31Vgkj68
       required:
         - id
+        - title
         - text
+        - programming_language
         - visibility
         - created_at
         - updated_at
+        - identifier
     pasteResponse:
       type: object
       properties:
@@ -334,13 +336,8 @@ components:
           properties:
             paste:
               $ref: '#/components/schemas/paste'
-            identifier:
-              type: string
-              description: Идентификатор для URL.
-              example: "qzxkXG8ZWa"
           required:
             - paste
-            - identifier
       required:
         - data
     validationError:

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\PasteController;
+use App\Http\Controllers\Web\PasteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PasteController::class, 'index']);
@@ -13,7 +13,7 @@ Route::prefix('p')->controller(PasteController::class)->name('paste.')->group(fu
     Route::get('/s/{uuid}', 'share')->name('share');
     Route::get('/{hashId}', 'show')->name('show');
 });
-Route::prefix('p')->controller(\App\Http\Controllers\ComplaintController::class)->name('complaint.')->group(function () {
+Route::prefix('p')->controller(\App\Http\Controllers\Web\ComplaintController::class)->name('complaint.')->group(function () {
     Route::get('/s/{uuid}/complaint', 'show')->name('showUuid');
     Route::get('/{hashId}/complaint', 'show')->name('showHashId');
     Route::post('/s/{uuid}/complaint', 'store')->name('storeUuid');

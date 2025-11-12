@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Web\AuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('guest')->controller(\App\Http\Controllers\AuthController::class)->group(function () {
+Route::middleware('guest')->controller(\App\Http\Controllers\Web\AuthController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login.show');
     Route::post('/login', 'login')->name('login');
     Route::get('/register', 'showRegisterForm')->name('register.show');
     Route::post('/register', 'register')->name('register');
 });
-Route::middleware('auth')->controller(\App\Http\Controllers\AuthController::class)->group(function () {
+Route::middleware('auth')->controller(\App\Http\Controllers\Web\AuthController::class)->group(function () {
     Route::post('/logout', 'logout')->name('logout');
     Route::get('/token', 'getToken')->name('auth.token');
 });
