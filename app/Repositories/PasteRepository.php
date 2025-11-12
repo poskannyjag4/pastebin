@@ -53,4 +53,9 @@ class PasteRepository extends BaseRepository
     {
         return $this->model->newQuery()->with(['user'])->paginate(15);
     }
+
+    public function getByToken(string $token): Paste
+    {
+        return $this->model->newQuery()->firstWhere('token', $token);
+    }
 }

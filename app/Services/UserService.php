@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTOs\UserDataFromSocialDTO;
 use App\DTOs\UserSocialCreationDTO;
 use App\Models\User;
+use App\Repositories\PersonalAccessTokenRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserSocialRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -16,6 +17,7 @@ class UserService
     public function __construct(
         private UserRepository $userRepository,
         private UserSocialRepository $userSocialRepository,
+        private PersonalAccessTokenRepository $personalAccessTokenRepository
     ) {}
 
     /**
@@ -44,13 +46,22 @@ class UserService
 
     public function generateToken(User $user): string
     {
-        if ($user->tokens->where('name', 'access_token')->count() != 0) {
-            $user->tokens()->where('name', 'access_token')->delete();
+        $userTokens = $this->personalAccessTokenRepository->findWhere([
+            'user_id' => $user->id,
+            'name' => 'access_token',
+        ]);
+        if ($userTokens->count() != 0) {
+            foreach ($userTokens as $userToken) {
+                $this->personalAccessTokenRepository->delete($userToken->id);
+            }
         }
 
         return $user->createToken('access_token')->plainTextToken;
     }
 
+    /**
+     * @throws ValidatorException
+     */
     public function findOrCreateUserForSocials(UserDataFromSocialDTO $data): User
     {
         $user = $this->userRepository->findWhere(['email' => $data->email]);

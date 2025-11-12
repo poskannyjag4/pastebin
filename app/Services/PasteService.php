@@ -107,8 +107,8 @@ class PasteService
 
     public function getUnlisted(string $uuid): PasteDTO
     {
-        $paste = $this->repository->findByField('token', $uuid)->first();
-        if (is_null($paste->expires_at) || $paste->expires_at > Carbon::now() || is_null($paste)) {
+        $paste = $this->repository->getByToken($uuid);
+        if (is_null($paste->expires_at) || $paste->expires_at > Carbon::now()) {
             return PasteDTO::from([
                 'paste' => $paste,
                 'identifier' => $this->hashids->encode($paste->id),
